@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const dotenv = require("dotenv").config();
 const connectDB = require("./config/db");
+const passportJwtStrategy = require("./config/passport-jwt-strategy");
 connectDB();
 const port = process.env.PORT || 8000;
 
