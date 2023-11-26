@@ -4,6 +4,7 @@ import { BsSearch } from "react-icons/bs";
 import { CiUser } from "react-icons/ci";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { RxCross1 } from "react-icons/rx";
+import { Link, NavLink } from "react-router-dom";
 
 const Header = () => {
   const [user, setUser] = useState(false);
@@ -11,12 +12,12 @@ const Header = () => {
   const [showSearch, setShowSearch] = useState(false);
   return (
     <div className="fixed top-0 ">
-      <div className="offerSection  flex text-2xl h-14 sm:h-7 md:text-lg w-screen items-center justify-around bg-black text-[#E9ECEF]">
+      <div className="offerSection   flex text-2xl h-14 sm:h-7 md:text-lg w-screen items-center justify-around bg-black text-textTwo">
         <p className="text-center capitalize">
           🎁 Order above ₹2999 today and Get Free Home delivery 🎉🥳
         </p>
       </div>
-      <div className="bg-[#F8F9FA] h-12   sm:w-screen flex items-center justify-between text-[#212529] p-1 text-lg font-semibold md:text-2xl">
+      <div className="bg-bgOne h-12   sm:w-screen flex items-center justify-between text-textOne p-1 text-lg font-semibold md:text-2xl">
         <div className="logoContainer flex items-center gap-2 justify-between">
           <div className="hamburgerMenu md:hidden  ">
             <RxHamburgerMenu
@@ -24,13 +25,17 @@ const Header = () => {
               className="text-4xl cursor-pointer"
             />
           </div>
-          <p className="text-3xl md:text-4xl cursor-pointer ">ogStore</p>
+          <Link to="/" className="text-3xl md:text-4xl cursor-pointer ">
+            ogStore
+          </Link>
         </div>
         <div className="itemsContainer  items-center gap-6 justify-evenly hidden md:flex">
-          <div>Him</div>
-          <div>Her</div>
-          <div>Unisex</div>
-          <div>All</div>
+          <NavLink to="/for-him" >
+            Him
+          </NavLink>
+          <NavLink to="/for-her">Her</NavLink>
+          <NavLink to="/unisex">Unisex</NavLink>
+          <NavLink to="/shop-all">All</NavLink>
         </div>
         <div className="loginOrCartContainer">
           {
@@ -52,13 +57,13 @@ const Header = () => {
       >
         <input
           placeholder="Search your kick...."
-          className="focus:outline-none bg-[#495057] text-[#F8F9FA] rounded-sm p-2 w-screen"
+          className="focus:outline-none bg-bgFour text-textThree rounded-sm p-2 w-screen"
         />
       </div>
       <div
         className={`mobileViewContainer flex flex-col items-center justify-center fixed gap-12 text-4xl ${
           !showHam ? "left-0 duration-500" : "-left-[50rem] duration-500"
-        } w-screen h-full bg-[#CED4DA] top-0 md:hidden`}
+        } w-screen h-full bg-bgOne top-0 md:hidden`}
       >
         {!showHam ? (
           <div className="fixed right-0 top-0 p-2">
@@ -70,10 +75,10 @@ const Header = () => {
         ) : (
           <></>
         )}
-        <div>Him</div>
-        <div>Her</div>
-        <div>Unisex</div>
-        <div>All</div>
+        <NavLink to="/for-him">Him</NavLink>
+        <NavLink to="/for-her">Her</NavLink>
+        <NavLink to="/unisex">Unisex</NavLink>
+        <NavLink to="/shop-all">All</NavLink>
       </div>
     </div>
   );
