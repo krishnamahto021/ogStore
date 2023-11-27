@@ -1,4 +1,3 @@
-const { use } = require("passport");
 const User = require("../models/userSchema");
 const passwordHelper = require("../utils/passwordHelper");
 const crypto = require("crypto");
@@ -53,7 +52,7 @@ module.exports.signIn = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).send({
+      return res.status(402).send({
         success: false,
         message: "Invalid Email",
       });
@@ -64,7 +63,7 @@ module.exports.signIn = async (req, res) => {
     );
 
     if (!matchPassword) {
-      return res.status(402).send({
+      return res.status(401).send({
         success: false,
         message: "Invalid Password",
       });
