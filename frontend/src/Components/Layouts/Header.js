@@ -30,9 +30,7 @@ const Header = () => {
           </Link>
         </div>
         <div className="itemsContainer  items-center gap-6 justify-evenly hidden md:flex">
-          <NavLink to="/for-him" >
-            Him
-          </NavLink>
+          <NavLink to="/for-him">Him</NavLink>
           <NavLink to="/for-her">Her</NavLink>
           <NavLink to="/unisex">Unisex</NavLink>
           <NavLink to="/shop-all">All</NavLink>
@@ -45,7 +43,9 @@ const Header = () => {
                 className="duration-200"
               />
               {user ? <BsCart /> : <></>}
-              <CiUser className="mr-4" />
+              <Link to={"/sign-in"}>
+                <CiUser className="mr-4" />
+              </Link>
             </div>
           }
         </div>

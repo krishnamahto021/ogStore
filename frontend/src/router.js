@@ -14,9 +14,13 @@ import ShopAll from "./Pages/Product/ShopAll";
 import Disclaimer from "./Pages/Disclaimer";
 import Terms from "./Pages/Terms";
 import ErrorPage from "./Pages/ErrorPage";
+import SignUp from "./Pages/Auth/SignUp";
+import SignIn from "./Pages/Auth/SignIn";
 
 export const router = createBrowserRouter([
   { path: "/", element: <Home /> },
+  { path: "/sign-up", element: <SignUp /> },
+  { path: "/sign-in", element: <SignIn /> },
   { path: "/about", element: <About /> },
   { path: "/contact", element: <Contact /> },
   { path: "/privacy", element: <Privacy /> },
