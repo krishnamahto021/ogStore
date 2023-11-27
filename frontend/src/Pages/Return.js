@@ -3,7 +3,14 @@ import Layout from "../Components/Layouts/Layout";
 
 const Return = () => {
   return (
-    <Layout>
+    <Layout
+      title={"Return Policy | ogStore"}
+      author={"ogStore"}
+      keywords={"ogStore, return policy, sneaker returns, premium sneakers"}
+      description={
+        "Review ogStore's return policy for premium sneakers. Find information on the return process and our dedication to ensuring your satisfaction."
+      }
+    >
       <div className="font-otherText flex flex-col gap-10  p-2 -mt-10">
         <div className="returnPolicy p-2">
           <p className="text-4xl md:text-6xl font-bold py-2">Return Policy</p>

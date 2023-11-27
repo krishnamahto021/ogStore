@@ -3,7 +3,14 @@ import Layout from "../Components/Layouts/Layout";
 
 const Cancellation = () => {
   return (
-    <Layout>
+    <Layout
+      title={"Order Cancellation | ogStore"}
+      author={"ogStore"}
+      keywords={"ogStore, order cancellation, cancel order, premium sneakers"}
+      description={
+        "Learn about the order cancellation process at ogStore for premium sneakers. Find information on how to cancel your order and our policies regarding cancellations."
+      }
+    >
       <div className="font-otherText flex flex-col gap-10  p-2 -mt-10">
         <div className="cancellationContainer p-2">
           <p className="text-4xl md:text-6xl font-bold py-2">

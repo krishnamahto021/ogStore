@@ -3,7 +3,16 @@ import Layout from "../Components/Layouts/Layout";
 
 const Terms = () => {
   return (
-    <Layout>
+    <Layout
+      title={"Terms and Conditions | ogStore"}
+      author={"ogStore"}
+      keywords={
+        "ogStore, terms and conditions, legal agreement, premium sneakers"
+      }
+      description={
+        "Read and understand the terms and conditions of shopping at ogStore for premium sneakers. Stay informed about our legal agreement and enjoy a secure shopping experience."
+      }
+    >
       <div className="font-otherText flex flex-col gap-10  p-2 -mt-10">
         <div className="cancellationContainer p-2">
           <p className="text-4xl md:text-6xl font-bold py-2">Terms of Use</p>

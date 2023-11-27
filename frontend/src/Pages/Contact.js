@@ -3,9 +3,16 @@ import Layout from "../Components/Layouts/Layout";
 
 const Contact = () => {
   return (
-    <Layout>
+    <Layout
+      title={"Contact Us | ogStore"}
+      author={"ogStore"}
+      keywords={"ogStore, contact us, customer support, sneaker store"}
+      description={
+        "Reach out to ogStore for any inquiries or assistance. Our dedicated customer support team is here to help you with your premium sneaker needs."
+      }
+    >
       <div className="font-otherText  p-2 -mt-10 text-4xl md:text-6xl font-bold py-2">
-       Contact Us
+        Contact Us
       </div>
       <div className="disclaimerPolicyContainer flex flex-col  gap-10 font-otherText p-2 text-lg">
         <div>

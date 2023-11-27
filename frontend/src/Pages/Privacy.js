@@ -3,7 +3,14 @@ import Layout from "../Components/Layouts/Layout";
 
 const Privacy = () => {
   return (
-    <Layout>
+    <Layout
+      title={"Privacy Policy | ogStore"}
+      author={"ogStore"}
+      keywords={"ogStore, privacy policy, data protection, premium sneakers"}
+      description={
+        "Explore ogStore's commitment to privacy and data protection for customers shopping for premium sneakers. Read our privacy policy to ensure a secure and confidential experience."
+      }
+    >
       <div className="font-otherText flex flex-col gap-10  p-2 -mt-10">
         <div className="privacyContainer p-2">
           <p className="text-4xl md:text-6xl font-bold py-2">

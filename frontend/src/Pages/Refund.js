@@ -2,7 +2,14 @@ import React from "react";
 import Layout from "../Components/Layouts/Layout";
 const Refund = () => {
   return (
-    <Layout>
+    <Layout
+      title={"Refund Policy | ogStore"}
+      author={"ogStore"}
+      keywords={"ogStore, refund policy, return process, sneaker refunds"}
+      description={
+        "Understand ogStore's refund policy for premium sneakers. Learn about the return process and our commitment to ensuring customer satisfaction."
+      }
+    >
       <div className="font-otherText flex flex-col gap-10  p-2 -mt-10">
         <div className="refundPolicy p-2">
           <p className="text-4xl md:text-6xl font-bold py-2">Return Policy</p>
@@ -42,11 +49,12 @@ const Refund = () => {
             How to Request a Refund ?
           </p>
           <p className="text-lg">
-            To initiate a refund, please contact us at Email: adminEmail , Phone:
-            adminPhone within 48 Hours of receipt of your order. Our customer
-            support team will provide you with a return authorization number and
-            instructions for returning the item. We request you to kindly review
-            our Return & Exchange Policy which outlines the following:
+            To initiate a refund, please contact us at Email: adminEmail ,
+            Phone: adminPhone within 48 Hours of receipt of your order. Our
+            customer support team will provide you with a return authorization
+            number and instructions for returning the item. We request you to
+            kindly review our Return & Exchange Policy which outlines the
+            following:
             <ul className="list-disc px-5 mt-1 font-semibold">
               <li> Once used, Items cannot be returned or refunded</li>
               <li>Damaged products are eligible for replacement or refund</li>

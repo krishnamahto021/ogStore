@@ -3,7 +3,14 @@ import Layout from "../Components/Layouts/Layout";
 
 const About = () => {
   return (
-    <Layout>
+    <Layout
+      title={"About Us | ogStore"}
+      author={"ogStore"}
+      keywords={"ogStore, about us, sneaker store, premium sneakers"}
+      description={
+        "Learn about ogStore, your go-to destination for high-quality and stylish sneakers. Discover our story and commitment to providing premium footwear."
+      }
+    >
       <div className="font-otherText  p-2 -mt-10 text-4xl md:text-6xl font-bold py-2 flex flex-col items-center gap-1 mb-10">
         <div>OgStore</div>
         <div className="text-textFour text-sm ml-5">Switch To Luxury</div>

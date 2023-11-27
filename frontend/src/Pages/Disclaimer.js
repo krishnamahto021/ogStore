@@ -3,7 +3,14 @@ import Layout from "../Components/Layouts/Layout";
 
 const Disclaimer = () => {
   return (
-    <Layout>
+    <Layout
+      title={"Disclaimer | ogStore"}
+      author={"ogStore"}
+      keywords={"ogStore, disclaimer, legal notice, premium sneakers"}
+      description={
+        "Review the disclaimer of ogStore for important legal information related to shopping for premium sneakers. Stay informed with our legal notice to ensure a transparent shopping experience."
+      }
+    >
       <div className="font-otherText  p-2 -mt-10 text-4xl md:text-6xl font-bold py-2">
         Disclaimer Policy
       </div>

@@ -3,7 +3,16 @@ import Layout from "../Components/Layouts/Layout";
 
 const Shipping = () => {
   return (
-    <Layout>
+    <Layout
+      title={"Shipping Information | ogStore"}
+      author={"ogStore"}
+      keywords={
+        "ogStore, shipping details, delivery information, premium sneakers"
+      }
+      description={
+        "Explore ogStore's shipping information for premium sneakers. Learn about our delivery process and get your favorite high-quality footwear delivered to your doorstep."
+      }
+    >
       <div className="font-otherText flex flex-col gap-10  p-2 -mt-10">
         <div className="shippingPolicy p-2">
           <p className="text-4xl md:text-6xl font-bold py-2">Shipping Policy</p>
