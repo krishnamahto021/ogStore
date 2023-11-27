@@ -5,9 +5,11 @@ import { CiUser } from "react-icons/ci";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { RxCross1 } from "react-icons/rx";
 import { Link, NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { userSelector } from "../../Redux/Reducers/userReducer";
 
 const Header = () => {
-  const [user, setUser] = useState(false);
+  const { loggedInUser } = useSelector(userSelector);
   const [showHam, setShowHam] = useState(true);
   const [showSearch, setShowSearch] = useState(false);
   return (
@@ -42,7 +44,7 @@ const Header = () => {
                 onClick={() => setShowSearch(!showSearch)}
                 className="duration-200"
               />
-              {user ? <BsCart /> : <></>}
+              {loggedInUser.jwtToken ? <BsCart /> : <></>}
               <Link to={"/sign-in"}>
                 <CiUser className="mr-4" />
               </Link>

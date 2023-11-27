@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { Helmet } from "react-helmet";
+import { useDispatch } from "react-redux";
+import { authorizeUser } from "../../Redux/Reducers/userReducer";
 
 const Layout = ({ children, title, description, keywords, author }) => {
+  const dispatch = useDispatch();
+    useEffect(() => {
+      dispatch(authorizeUser());
+    }, [dispatch]);
   return (
     <div>
       <Helmet>

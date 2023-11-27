@@ -80,8 +80,8 @@ module.exports.signIn = async (req, res) => {
         email,
         address: user.address,
         phone: user.phone,
+        jwtToken,
       },
-      jwtToken,
     });
   } catch (error) {
     return res.status(500).send({

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Layout from "../../Components/Layouts/Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa6";
 import { FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
@@ -13,6 +13,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
+  const navigate = useNavigate();
   const clearInput = () => {
     setName("");
     setEmail("");
@@ -32,10 +33,13 @@ const SignUp = () => {
     });
     if (data.status === 200) {
       toast.success("User Already Exists");
+      navigate("/sign-in");
     } else if (data.status === 201) {
       toast.success("User Created Successfully");
+      navigate("/sign-up");
     } else {
       toast.error("Internal server Error");
+      navigate("/");
     }
     clearInput();
   };

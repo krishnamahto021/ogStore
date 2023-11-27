@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../Components/Layouts/Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa6";
 import { FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { authorizeUser } from "../../Redux/Reducers/userReducer";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const clearInputs = () => {
     setEmail("");
     setPassword("");
@@ -19,9 +24,14 @@ const SignIn = () => {
 
     try {
       const response = await axios.post("/user/signIn", { email, password });
-      console.log(response.data);
       if (response.status === 200) {
         toast.success("Welcome Back");
+        localStorage.setItem(
+          "loggedInUser",
+          JSON.stringify(response.data.user)
+        );
+        dispatch(authorizeUser());
+        navigate("/");
       } else {
         toast.error(response.data.message || "An error occurred");
       }
@@ -30,6 +40,7 @@ const SignIn = () => {
         // The request was made, and the server responded with a non-2xx status code
         //  console.error("Server error:", error.response.data);
         toast.error(error.response.data.message || "Internal Server Error");
+        navigate("/sign-in");
       }
     }
 
