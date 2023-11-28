@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Layout from "../../Components/Layouts/Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa6";
 import { FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { authorizeUser } from "../../Redux/Reducers/userReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { authorizeUser, userSelector } from "../../Redux/Reducers/userReducer";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,6 +14,7 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { redirectPath } = useSelector(userSelector);
 
   const clearInputs = () => {
     setEmail("");
@@ -31,7 +32,7 @@ const SignIn = () => {
           JSON.stringify(response.data.user)
         );
         dispatch(authorizeUser());
-        navigate("/");
+        navigate("/user/profile");
       } else {
         toast.error(response.data.message || "An error occurred");
       }

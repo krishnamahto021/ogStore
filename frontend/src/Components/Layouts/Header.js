@@ -45,7 +45,7 @@ const Header = () => {
                 className="duration-200"
               />
               {loggedInUser.jwtToken ? <BsCart /> : <></>}
-              <Link to={"/sign-in"}>
+              <Link to={loggedInUser.jwtToken ? "/user/profile" : "/sign-in"}>
                 <CiUser className="mr-4" />
               </Link>
             </div>

@@ -19,15 +19,21 @@ import SignIn from "./Pages/Auth/SignIn";
 import { useSelector } from "react-redux";
 import { userSelector } from "./Redux/Reducers/userReducer";
 import UserProfile from "./Pages/User/UserProfile";
+import Spinner from "./Components/Spinner";
+import Payment from "./Pages/User/Payment";
 
 export const ProtectedRouteHome = ({ element }) => {
   const { loggedInUser } = useSelector(userSelector);
-  return loggedInUser.jwtToken ? element : <Navigate to="/sign-in" />;
+  return loggedInUser.jwtToken ? element : <Spinner />;
 };
 
 export const ProtectedRoute = ({ element }) => {
-  const { loggedInUser } = useSelector(userSelector);
-  return loggedInUser.jwtToken ? <Navigate to="/user/profile" /> : element;
+  const { loggedInUser, redirectPath } = useSelector(userSelector);
+  return loggedInUser.jwtToken ? (
+    <Navigate to={redirectPath || "/user/profile"} />
+  ) : (
+    element
+  );
 };
 
 export const router = createBrowserRouter([
@@ -51,6 +57,10 @@ export const router = createBrowserRouter([
   {
     path: "/user/profile",
     element: <ProtectedRouteHome element={<UserProfile />} />,
+  },
+  {
+    path: "/user/payment",
+    element: <ProtectedRouteHome element={<Payment />} />,
   },
 
   { path: "/*", element: <ErrorPage /> },
