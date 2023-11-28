@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import Home from "./Pages/Home";
 import Privacy from "./Pages/Privacy";
 import Shipping from "./Pages/Shipping";
@@ -16,11 +16,24 @@ import Terms from "./Pages/Terms";
 import ErrorPage from "./Pages/ErrorPage";
 import SignUp from "./Pages/Auth/SignUp";
 import SignIn from "./Pages/Auth/SignIn";
+import { useSelector } from "react-redux";
+import { userSelector } from "./Redux/Reducers/userReducer";
+import UserProfile from "./Pages/User/UserProfile";
+
+export const ProtectedRouteHome = ({ element }) => {
+  const { loggedInUser } = useSelector(userSelector);
+  return loggedInUser.jwtToken ? element : <Navigate to="/sign-in" />;
+};
+
+export const ProtectedRoute = ({ element }) => {
+  const { loggedInUser } = useSelector(userSelector);
+  return loggedInUser.jwtToken ? <Navigate to="/user/profile" /> : element;
+};
 
 export const router = createBrowserRouter([
   { path: "/", element: <Home /> },
-  { path: "/sign-up", element: <SignUp /> },
-  { path: "/sign-in", element: <SignIn /> },
+  { path: "/sign-in", element: <ProtectedRoute element={<SignIn />} /> },
+  { path: "/sign-up", element: <ProtectedRoute element={<SignUp />} /> },
   { path: "/about", element: <About /> },
   { path: "/contact", element: <Contact /> },
   { path: "/privacy", element: <Privacy /> },
@@ -34,5 +47,11 @@ export const router = createBrowserRouter([
   { path: "/for-her", element: <Her /> },
   { path: "/unisex", element: <Unisex /> },
   { path: "/shop-all", element: <ShopAll /> },
+
+  {
+    path: "/user/profile",
+    element: <ProtectedRouteHome element={<UserProfile />} />,
+  },
+
   { path: "/*", element: <ErrorPage /> },
 ]);

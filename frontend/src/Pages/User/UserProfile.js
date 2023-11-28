@@ -1,11 +1,8 @@
-import React from 'react'
+import React from "react";
+import Layout from "../../Components/Layouts/Layout";
 
 const UserProfile = () => {
-  return (
-    <Layout>
-       UserProfile
-    </Layout>
-  )
-}
+  return <Layout>UserProfile</Layout>;
+};
 
-export default UserProfile
+export default UserProfile;
