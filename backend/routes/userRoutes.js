@@ -8,6 +8,9 @@ router.post("/signUp", userController.signUp);
 router.post("/signIn", userController.signIn);
 router.get("/verify-user/:token", userController.verifyUser);
 
+router.post("/forgotten-password", userController.forgottenPassword);
+router.post("/update-password/:token", userController.updatePassword);
+
 // test router for protected route in backend
 router.get(
   "/testRoute",

@@ -1,3 +1,6 @@
+const {
+  forgottenPasswordEmail,
+} = require("../mailers/forgottenPasswordMailer");
 const { verifyUserEmail } = require("../mailers/verifyUserEmail");
 const User = require("../models/userSchema");
 const passwordHelper = require("../utils/passwordHelper");
@@ -103,26 +106,81 @@ module.exports.signIn = async (req, res) => {
 module.exports.verifyUser = async (req, res) => {
   try {
     const { token } = req.params;
+    console.log(token);
     const user = await User.findOne({ token });
     if (!user) {
       return res.status(401).send({
         message: "Token not valid",
         success: false,
       });
-    } else {
-      user.isVerified = true;
-      await user.save();
-      return res.status(200).send({
-        success: true,
-        message: "Verified Successfully",
-      });
     }
+    user.isVerified = true;
+    user.token = crypto.randomBytes(16).toString("hex");
+    await user.save();
+    console.log(user);
+
+    return res.status(200).send({
+      success: true,
+      message: "Verified Successfully",
+    });
   } catch (error) {
     console.log(`Error in the verification of user ${error}`);
     return res.status(500).send({
       success: false,
       message: "Internal Server Error",
       error,
+    });
+  }
+};
+
+// to send mail to the user after he clicks the submit the forgotten password form
+module.exports.forgottenPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (user) {
+      //send mail
+      forgottenPasswordEmail(user);
+      return res.status(200).send({
+        success: true,
+        message: "Check your mail to update password",
+      });
+    } else {
+      return res.status(400).send({
+        success: false,
+        message: "Email not Registered",
+      });
+    }
+  } catch (error) {
+    console.log(`Error in sending forgotten password email ${error}`);
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+      error,
+    });
+  }
+};
+
+module.exports.updatePassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+  const user = await User.findOne({ token });
+  if (!user) {
+    return res.status(401).send({
+      message: "Invalid Token",
+      success: false,
+    });
+  } else {
+    const hashedPassword = await passwordHelper.hashingPasswordFunction(
+      password
+    );
+    console.log(hashedPassword);
+    user.password = hashedPassword;
+    user.token = crypto.randomBytes(16).toString("hex");
+    await user.save();
+    return res.status(200).send({
+      success: true,
+      message: "Password updated Successfully",
     });
   }
 };

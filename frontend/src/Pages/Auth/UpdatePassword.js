@@ -1,37 +1,28 @@
 import React, { useState } from "react";
 import Layout from "../../Components/Layouts/Layout";
-import { Link, useNavigate } from "react-router-dom";
-import { FaEye } from "react-icons/fa6";
-import { FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useDispatch} from "react-redux";
-import { authorizeUser} from "../../Redux/Reducers/userReducer";
+import { useNavigate } from "react-router-dom";
+import { FaEye } from "react-icons/fa6";
+import { FaEyeSlash } from "react-icons/fa";
 
-const SignIn = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
+const UpdatePassword = () => {
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-
+  const token = window.location.pathname.split("/").pop();
   const clearInputs = () => {
-    setEmail("");
     setPassword("");
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await axios.post("/user/signIn", { email, password });
+      const response = await axios.post(`/user/update-password/${token}`, {
+        password,
+      });
       if (response.status === 200) {
-        toast.success("Welcome Back");
-        localStorage.setItem(
-          "loggedInUser",
-          JSON.stringify(response.data.user)
-        );
-        dispatch(authorizeUser());
-        navigate("/user/profile");
+        toast.success("Password Updated ");
+        navigate("/sign-in");
       } else {
         toast.error(response.data.message || "An error occurred");
       }
@@ -46,10 +37,9 @@ const SignIn = () => {
 
     clearInputs();
   };
-
   return (
     <Layout
-      title={"Sign In | ogStore"}
+      title={"Forgotten Password | ogStore"}
       author={"ogStore"}
       keywords={"sign in, log in, user authentication"}
       description={
@@ -62,20 +52,8 @@ const SignIn = () => {
           onSubmit={handleSubmit}
         >
           <h1 className="text-center p-1 text-lg font-semibold text-textOne">
-            Welcome Back !!
+            Reset your Password
           </h1>
-          <div className="flex flex-col gap-2 justify-between">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="p-1 rounded-sm bg-bgThree focus:outline-none"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            ></input>
-          </div>
-
           <div className="flex flex-col gap-2 justify-between">
             <label htmlFor="password">Password</label>
             <input
@@ -93,30 +71,19 @@ const SignIn = () => {
               {showPassword ? <FaEye /> : <FaEyeSlash />}
             </span>
           </div>
+
           <div className="flex justify-around mt-5">
             <button
               type="submit"
               className="p-2 rounded-md bg-bgTwo text-textThree hover:bg-bgThree hover:text-textOne duration-300"
             >
-              Shop Now
+              Update Password
             </button>
           </div>
-          <Link
-            to="/sign-up"
-            className="text-center text-lg underline text-textOne hover:scale-105 duration-300"
-          >
-            New to ogStore??
-          </Link>
-          <Link
-            to="/forgotten-password"
-            className="text-center text-lg underline text-red-600 hover:scale-105 duration-300"
-          >
-            Forgotten Password??
-          </Link>
         </form>
       </div>
     </Layout>
   );
 };
 
-export default SignIn;
+export default UpdatePassword;

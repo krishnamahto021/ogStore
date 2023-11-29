@@ -7,44 +7,44 @@ import ClipLoader from "react-spinners/ClipLoader";
 const VerifyUserEmail = () => {
   const navigate = useNavigate();
   const [count, setCount] = useState(3);
+  let verifyUserCalled = false; // Flag to track if verifyUser is already called
 
-  async function verifyUserEmail(token) {
-    try {
-      const data = await axios.get(`/user/verify-user/${token}`);
-      if (data.success) {
-        console.log(data.success);
-        toast.success(`${data.message}`);
+  const verifyUser = async (token) => {
+    if (!verifyUserCalled) {
+      verifyUserCalled = true;
+      try {
+        const { data } = await axios.get(`/user/verify-user/${token}`);
+        toast.success(data.message);
         setTimeout(() => {
           navigate("/sign-in");
-        }, 3000); // Redirect to login page after 3 seconds
-      }
-    } catch (error) {
-      if (error.response) {
-        toast.error(`${error.response.data.message}`);
-        navigate("/sign-up");
-      } else {
-        toast.error(`Internal Server Error`);
+        }, 3000);
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error("Internal Server Error");
+        }
         navigate("/sign-up");
       }
     }
-  }
+  };
 
   useEffect(() => {
     const token = window.location.pathname.split("/").pop();
-    verifyUserEmail(token);
+    verifyUser(token); // Only call verifyUser once
   }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCount((prevValue) => --prevValue);
+      setCount((prev) => prev - 1);
     }, 1000);
 
-    if (count === 0) {
-      toast.success(`Email verified Sucessfully`);
-    }
-    count === 0 && navigate("/sign-in");
-
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      if (count === 0) {
+        navigate("/sign-in");
+      }
+    };
   }, [count, navigate]);
 
   return (
