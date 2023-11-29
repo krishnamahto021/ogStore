@@ -35,7 +35,8 @@ const SignUp = () => {
       toast.success("User Already Exists");
       navigate("/sign-in");
     } else if (data.status === 201) {
-      toast.success("User Created Successfully");
+      toast.success("Verify Email for Sneaker Exclusive");
+
       navigate("/sign-up");
     } else {
       toast.error("Internal server Error");

@@ -6,6 +6,7 @@ const { checkAdmin } = require("../middlewares/adminMiddleware");
 
 router.post("/signUp", userController.signUp);
 router.post("/signIn", userController.signIn);
+router.get("/verify-user/:token", userController.verifyUser);
 
 // test router for protected route in backend
 router.get(

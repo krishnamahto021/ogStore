@@ -21,6 +21,7 @@ import { userSelector } from "./Redux/Reducers/userReducer";
 import UserProfile from "./Pages/User/UserProfile";
 import Spinner from "./Components/Spinner";
 import Payment from "./Pages/User/Payment";
+import VerifyUserEmail from "./Pages/Auth/VerifyUserEmail";
 
 export const ProtectedRouteHome = ({ element }) => {
   const { loggedInUser } = useSelector(userSelector);
@@ -53,6 +54,7 @@ export const router = createBrowserRouter([
   { path: "/for-her", element: <Her /> },
   { path: "/unisex", element: <Unisex /> },
   { path: "/shop-all", element: <ShopAll /> },
+  { path: "/verify-user/:token", element: <VerifyUserEmail /> },
 
   {
     path: "/user/profile",

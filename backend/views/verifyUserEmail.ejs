@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Verification</title>
+  </head>
+
+  <body>
+    <div
+      style="
+        max-width: 600px;
+        background-color: #f8f9fa;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+        border: 2px solid #212529;
+      "
+    >
+      <h2>Verify for Sneaker Exclusives!</h2>
+      <p>
+        Welcome 🥳 to the OgStore family. Verify your Email to continue your
+        purchase.
+      </p>
+      <a
+        href="http://localhost:3000/verify-user/<%=token%>"
+        style="
+          display: inline-block;
+          padding: 10px 20px;
+          font-size: 16px;
+          text-decoration: none;
+          background-color: #212529;
+          color: #f8f9fa;
+          border-radius: 5px;
+          transition: all 0.2s ease-in-out;
+        "
+        onmouseover="this.style.backgroundColor='#f8f9fa'; this.style.color='#212529';"
+        onmouseout="this.style.backgroundColor='#212529'; this.style.color='#f8f9fa';"
+        >Verify Now</a
+      >
+    </div>
+  </body>
+</html>

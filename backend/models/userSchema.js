@@ -6,7 +6,7 @@ const userModel = mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     token: { type: String },
-    isVerified: { type: Boolean, default: true },
+    isVerified: { type: Boolean, default: false },
     phone: {
       type: Number,
       requied: true,

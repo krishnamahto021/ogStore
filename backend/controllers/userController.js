@@ -1,3 +1,4 @@
+const { verifyUserEmail } = require("../mailers/verifyUserEmail");
 const User = require("../models/userSchema");
 const passwordHelper = require("../utils/passwordHelper");
 const crypto = require("crypto");
@@ -27,6 +28,7 @@ module.exports.signUp = async (req, res) => {
       address,
       token: crypto.randomBytes(16).toString("hex"),
     });
+    verifyUserEmail(newUser);
     return res.status(201).send({
       success: true,
       message: "User created successfully",
@@ -55,6 +57,12 @@ module.exports.signIn = async (req, res) => {
       return res.status(402).send({
         success: false,
         message: "Invalid Email",
+      });
+    }
+    if (!user.isVerified) {
+      return res.status(401).send({
+        success: false,
+        message: "Please Verify your Email",
       });
     }
     const matchPassword = await passwordHelper.compareHashedPasswordFunction(
@@ -87,6 +95,33 @@ module.exports.signIn = async (req, res) => {
     return res.status(500).send({
       success: false,
       message: "Error in logging In",
+      error,
+    });
+  }
+};
+
+module.exports.verifyUser = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const user = await User.findOne({ token });
+    if (!user) {
+      return res.status(401).send({
+        message: "Token not valid",
+        success: false,
+      });
+    } else {
+      user.isVerified = true;
+      await user.save();
+      return res.status(200).send({
+        success: true,
+        message: "Verified Successfully",
+      });
+    }
+  } catch (error) {
+    console.log(`Error in the verification of user ${error}`);
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
       error,
     });
   }
