@@ -106,7 +106,6 @@ module.exports.signIn = async (req, res) => {
 module.exports.verifyUser = async (req, res) => {
   try {
     const { token } = req.params;
-    console.log(token);
     const user = await User.findOne({ token });
     if (!user) {
       return res.status(401).send({
@@ -174,7 +173,6 @@ module.exports.updatePassword = async (req, res) => {
     const hashedPassword = await passwordHelper.hashingPasswordFunction(
       password
     );
-    console.log(hashedPassword);
     user.password = hashedPassword;
     user.token = crypto.randomBytes(16).toString("hex");
     await user.save();
@@ -183,4 +181,11 @@ module.exports.updatePassword = async (req, res) => {
       message: "Password updated Successfully",
     });
   }
+};
+
+//check the authentication of the admin
+module.exports.checkAuth = async (req, res) => {
+  return res.status(200).send({
+    message: "Hello Admin",
+  });
 };

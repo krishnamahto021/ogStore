@@ -2,7 +2,7 @@ import React from "react";
 import Layout from "../../Components/Layouts/Layout";
 import UserSideBar from "./UserSideBar";
 
-const UserProfile = () => {
+const Orders = () => {
   return (
     <Layout>
       <div className="flex">
@@ -13,4 +13,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default Orders;

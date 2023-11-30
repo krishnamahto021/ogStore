@@ -11,14 +11,12 @@ router.get("/verify-user/:token", userController.verifyUser);
 router.post("/forgotten-password", userController.forgottenPassword);
 router.post("/update-password/:token", userController.updatePassword);
 
-// test router for protected route in backend
+// admin route
 router.get(
-  "/testRoute",
+  "/admin",
   passport.authenticate("jwt", { session: false }),
   checkAdmin,
-  (req, res) => {
-    res.send("protected route");
-  }
+  userController.checkAuth
 );
 
 module.exports = router;

@@ -6,7 +6,7 @@ module.exports.checkAdmin = async (req, res, next) => {
     if (user.role !== 1) {
       return res.status(400).send({
         success: false,
-        message: "not an admin",
+        message: "Not an admin",
       });
     }
     next();

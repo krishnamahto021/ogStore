@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setRedirectPath, userSelector } from "../Redux/Reducers/userReducer";
 
 const Spinner = () => {
-  const [count, setCount] = useState(5);
+  const [count, setCount] = useState(3);
   const navigate = useNavigate();
   const location = useLocation();
   const { redirectPath } = useSelector(userSelector);

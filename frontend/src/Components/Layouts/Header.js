@@ -36,6 +36,7 @@ const Header = () => {
           <NavLink to="/for-her">Her</NavLink>
           <NavLink to="/unisex">Unisex</NavLink>
           <NavLink to="/shop-all">All</NavLink>
+          <NavLink to="/admin">Admin</NavLink>
         </div>
         <div className="loginOrCartContainer">
           {

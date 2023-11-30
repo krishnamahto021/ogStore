@@ -20,10 +20,17 @@ import { useSelector } from "react-redux";
 import { userSelector } from "./Redux/Reducers/userReducer";
 import UserProfile from "./Pages/User/UserProfile";
 import Spinner from "./Components/Spinner";
-import Payment from "./Pages/User/Payment";
 import VerifyUserEmail from "./Pages/Auth/VerifyUserEmail";
 import ForgottenPassword from "./Pages/Auth/ForgottenPassword";
 import UpdatePassword from "./Pages/Auth/UpdatePassword";
+import axios from "axios";
+import AdminDashboard from "./Pages/Admin/AdminDashboard";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import AllOrders from "./Pages/Admin/AllOrders";
+import CreateCategory from "./Pages/Admin/CreateCategory";
+import CreateProduct from "./Pages/Admin/CreateProduct";
+import Orders from "./Pages/User/Orders";
 
 export const ProtectedRouteHome = ({ element }) => {
   const { loggedInUser } = useSelector(userSelector);
@@ -39,7 +46,43 @@ export const ProtectedRoute = ({ element }) => {
   );
 };
 
+export const ProtectedRouteAdmin = ({ element }) => {
+  const { loggedInUser } = useSelector(userSelector);
+  const [isAdmin, setIsAdmin] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${loggedInUser.jwtToken}`,
+          },
+        };
+        const response = await axios.get("/user/admin", config);
+        setIsAdmin(response.status === 200);
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error("Internal Server error");
+        }
+        setIsAdmin(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (isAdmin === null) {
+    // Loading state, you can show a loading spinner here
+    return <Spinner />;
+  }
+
+  return isAdmin ? element : <Navigate to="/" />;
+};
+
 export const router = createBrowserRouter([
+  // public routes
   { path: "/", element: <Home /> },
   { path: "/sign-in", element: <ProtectedRoute element={<SignIn />} /> },
   { path: "/sign-up", element: <ProtectedRoute element={<SignUp />} /> },
@@ -60,13 +103,32 @@ export const router = createBrowserRouter([
   { path: "/forgotten-password", element: <ForgottenPassword /> },
   { path: "/update-password/:token", element: <UpdatePassword /> },
 
+  // user routes
   {
     path: "/user/profile",
     element: <ProtectedRouteHome element={<UserProfile />} />,
   },
   {
-    path: "/user/payment",
-    element: <ProtectedRouteHome element={<Payment />} />,
+    path: "/user/orders",
+    element: <Orders />,
+  },
+
+  // admin routes
+  {
+    path: "/admin",
+    element: <ProtectedRouteAdmin element={<AdminDashboard />} />,
+  },
+  {
+    path: "/admin/orders",
+    element: <ProtectedRouteAdmin element={<AllOrders />} />,
+  },
+  {
+    path: "/admin/categories",
+    element: <ProtectedRouteAdmin element={<CreateCategory />} />,
+  },
+  {
+    path: "/admin/add-product",
+    element: <ProtectedRouteAdmin element={<CreateProduct />} />,
   },
 
   { path: "/*", element: <ErrorPage /> },

@@ -17,7 +17,6 @@ const ForgottenPassword = () => {
       const response = await axios.post("/user/forgotten-password", {
         email,
       });
-      console.log(response);
       if (response.status === 200) {
         toast.success("Verification Link Sent");
       } else {
