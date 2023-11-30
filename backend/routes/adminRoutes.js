@@ -29,4 +29,30 @@ router.delete(
   adminController.deleteCategory
 );
 
+// product routes
+router.post(
+  "/create-product",
+  passport.authenticate("jwt", { session: false }),
+  checkAdmin,
+  adminController.createProduct
+);
+
+router.get("/fetch-product", adminController.fetchAllProduct);
+
+router.get("/fetch-product/:id", adminController.fetchSingleProduct);
+
+router.post(
+  "/update-product/:id",
+  passport.authenticate("jwt", { session: false }),
+  checkAdmin,
+  adminController.updateProduct
+);
+
+router.delete(
+  "/delete-product/:id",
+  passport.authenticate("jwt", { session: false }),
+  checkAdmin,
+  adminController.deleteProduct
+);
+
 module.exports = router;

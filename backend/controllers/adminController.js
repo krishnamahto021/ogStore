@@ -1,6 +1,8 @@
 const Category = require("../models/categorySchema");
 const slugify = require("slug");
+const Product = require("../models/productSchema");
 
+// category api
 module.exports.createCategory = async (req, res) => {
   try {
     const { name } = req.body;
@@ -107,6 +109,119 @@ module.exports.deleteCategory = async (req, res) => {
     console.log(`Error in deleting category ${error}`);
     return res.status(500).send({
       message: "Error in deleting Category",
+      success: false,
+    });
+  }
+};
+
+// product api
+module.exports.createProduct = async (req, res) => {
+  try {
+    const { name, image, price, category, sizes } = req.body;
+    const newProduct = await Product.create({
+      name,
+      price,
+      image,
+      category,
+      sizes,
+      slug: slugify(name),
+    });
+    return res.status(201).send({
+      message: "Product Added Succesfully",
+      success: true,
+      newProduct,
+    });
+  } catch (error) {
+    console.log(`Error in creating product ${error}`);
+    return res.status(500).send({
+      success: false,
+      message: "Errror in creating product",
+    });
+  }
+};
+
+module.exports.fetchAllProduct = async (req, res) => {
+  try {
+    const products = await Product.find({})
+      .populate("category")
+      .select("-image")
+      .limit(12)
+      .sort({ createdAt: -1 });
+    return res.status(200).send({
+      message: "Product fetched successfully",
+      totalProducts: products.length,
+      success: true,
+      products,
+    });
+  } catch (error) {
+    console.log(`Error in fetching product ${error}`);
+    return res.status(500).send({
+      message: "Error in fetching product",
+      success: false,
+    });
+  }
+};
+
+module.exports.fetchSingleProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    if (product) {
+      return res.status(200).send({
+        success: true,
+        message: "Fetched Product",
+        product,
+      });
+    } else {
+      return res.status(400).send({
+        success: false,
+        message: "No such product",
+      });
+    }
+  } catch (error) {
+    console.log(`Error in fetching the single Product ${error}`);
+    return res.status(500).send({
+      success: false,
+      message: "Error in fetching single product",
+    });
+  }
+};
+
+module.exports.updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, image, price, category, sizes } = req.body;
+    const product = await Product.findByIdAndUpdate(
+      id,
+      { name, image, price, category, sizes, slug: slugify(name) },
+      { new: true }
+    );
+    return res.status(200).send({
+      success: true,
+      message: "Product Updated Successfully",
+      product,
+    });
+  } catch (error) {
+    console.log(`Error in updating product ${error}`);
+    return res.status(500).send({
+      message: "Error in updating product",
+      success: false,
+    });
+  }
+};
+
+module.exports.deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Product.findByIdAndDelete(id);
+    return res.status(200).send({
+      success: true,
+      message: "Product deleted succesfully",
+    });
+  } catch (error) {
+    console.log(`Error in deleting category ${error}`);
+    return res.status(500).send({
+      message: "Error in deleting Product",
       success: false,
     });
   }
