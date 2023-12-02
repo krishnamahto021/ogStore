@@ -119,7 +119,6 @@ module.exports.deleteCategory = async (req, res) => {
 module.exports.createProduct = async (req, res) => {
   try {
     const { name, image, price, category, sizes } = req.body;
-    console.log(name, sizes);
     const newProduct = await Product.create({
       name,
       price,
@@ -146,7 +145,6 @@ module.exports.fetchAllProduct = async (req, res) => {
   try {
     const products = await Product.find({})
       .populate("category")
-      .select("-image")
       .limit(12)
       .sort({ createdAt: -1 });
     return res.status(200).send({
@@ -192,10 +190,10 @@ module.exports.fetchSingleProduct = async (req, res) => {
 module.exports.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, image, price, category, sizes } = req.body;
+    const { name, price } = req.body;
     const product = await Product.findByIdAndUpdate(
       id,
-      { name, image, price, category, sizes, slug: slugify(name) },
+      { name, price, slug: slugify(name) },
       { new: true }
     );
     return res.status(200).send({

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 
 const initialState = {
   categories: [],
+  products: [],
 };
 
 export const getInitialState = createAsyncThunk(
@@ -15,10 +16,22 @@ export const getInitialState = createAsyncThunk(
     } catch (error) {
       console.log(error.response.data);
       if (error.response) {
-        toast.error(`${error.response.data.message}`);
+        toast.error(`Something Went wrong`);
       } else {
         toast.error(`Internal Server Error`);
       }
+    }
+  }
+);
+
+export const getInitialProducts = createAsyncThunk(
+  "admin/fetch-product",
+  async (config, thunkAPI) => {
+    try {
+      const { data } = await axios.get("/admin/fetch-product", config);
+      return data.products;
+    } catch (error) {
+      toast.error(`Something Went Wrong`);
     }
   }
 );
@@ -55,18 +68,55 @@ const adminSlice = createSlice({
         categories: state.categories.filter((category) => category._id !== id),
       };
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(getInitialState.fulfilled, (state, action) => {
+    setProduct: (state, action) => {
       return {
         ...state,
-        categories: [...action.payload],
+        products: [action.payload, ...state.products],
       };
-    });
+    },
+    updateProduct: (state, action) => {
+      const { id, updatedProduct } = action.payload;
+      return {
+        ...state,
+        products: state.products.map((product) =>
+          product._id === id ? { ...product, ...updatedProduct } : product
+        ),
+      };
+    },
+
+    deleteProduct: (state, action) => {
+      const { id } = action.payload;
+      console.log(id);
+      return {
+        ...state,
+        products: state.products.filter((p) => p._id !== id),
+      };
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getInitialState.fulfilled, (state, action) => {
+        return {
+          ...state,
+          categories: [...action.payload],
+        };
+      })
+      .addCase(getInitialProducts.fulfilled, (state, action) => {
+        return {
+          ...state,
+          products: [...action.payload],
+        };
+      });
   },
 });
 
 export const adminReducer = adminSlice.reducer;
-export const { setCategory, updateCategory, deleteCategory } =
-  adminSlice.actions;
+export const {
+  setCategory,
+  updateCategory,
+  deleteCategory,
+  setProduct,
+  updateProduct,
+  deleteProduct,
+} = adminSlice.actions;
 export const adminSelector = (state) => state.adminReducer;
