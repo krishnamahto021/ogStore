@@ -13,7 +13,7 @@ import {
 import CategoryCard from "./CategoryCard";
 const CreateCategory = () => {
   const [name, setName] = useState("");
-  const [showInput, setShowInput] = useState(false);
+  const [sizes, setSizes] = useState("");
   const { loggedInUser } = useSelector(userSelector);
   const { categories } = useSelector(adminSelector);
   const dispatch = useDispatch();
@@ -25,20 +25,23 @@ const CreateCategory = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const sizesArray = sizes.split(",").map((size) => size.trim());
+    console.log(sizesArray);
     try {
       const { data } = await axios.post(
         "/admin/create-category",
-        { name },
+        { name, sizes: sizesArray },
         config
       );
       if (data.success) {
         toast.success(`${data.message}`);
         dispatch(setCategory(data.newCategory));
         setName("");
+        setSizes("");
       }
     } catch (error) {
       if (error.response) {
-        toast.error(error.response.data.message);
+        toast.error(`Something Went Wrong`);
       } else {
         toast.error(`Internal server Error`);
       }
@@ -65,6 +68,18 @@ const CreateCategory = () => {
                 required
               ></input>
             </div>
+            <div className="flex flex-col gap-2 justify-between">
+              <label htmlFor="sizes">Size</label>
+              <input
+                type="text"
+                placeholder="Enter Sizes with Comma"
+                className="p-1 rounded-sm bg-bgOne focus:outline-none"
+                value={sizes}
+                onChange={(e) => setSizes(e.target.value)}
+                required
+              ></input>
+            </div>
+
             <div className="flex justify-around mt-5">
               <button
                 type="submit"
@@ -76,11 +91,11 @@ const CreateCategory = () => {
           </form>
         </div>
         <div className="categoriesContainer p-2 w-full">
-          <div className="gridContainer gap-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="gridContainer h-[20vh] md:h-[30vh] gap-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {categories.map((category) => (
               <div
                 key={category.id}
-                className="bg-bgThree text-textOne w-full  h-[20vh] cursor-pointer flex flex-col  justify-between  rounded-md p-2"
+                className="bg-bgThree text-textOne  cursor-pointer flex flex-col gap-2  justify-between  rounded-md p-2"
               >
                 <CategoryCard category={category} />
               </div>

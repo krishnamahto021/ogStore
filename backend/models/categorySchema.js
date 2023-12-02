@@ -6,6 +6,10 @@ const categoryModel = mongoose.Schema({
     required: true,
     unique: true,
   },
+  sizes: {
+    type: Array,
+    required: true,
+  },
   slug: {
     type: String,
     lowercase: true,

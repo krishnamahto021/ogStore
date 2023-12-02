@@ -5,7 +5,7 @@ const Product = require("../models/productSchema");
 // category api
 module.exports.createCategory = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, sizes } = req.body;
     if (!name) {
       return res.status(400).send({
         message: "Name of Category is required!",
@@ -20,6 +20,7 @@ module.exports.createCategory = async (req, res) => {
 
     const newCategory = await Category.create({
       name,
+      sizes,
       slug: slugify(name),
     });
     return res.status(201).send({
@@ -118,6 +119,7 @@ module.exports.deleteCategory = async (req, res) => {
 module.exports.createProduct = async (req, res) => {
   try {
     const { name, image, price, category, sizes } = req.body;
+    console.log(name, sizes);
     const newProduct = await Product.create({
       name,
       price,

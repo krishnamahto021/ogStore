@@ -11,7 +11,6 @@ export const getInitialState = createAsyncThunk(
   async (config, thunkAPI) => {
     try {
       const { data } = await axios.get("/admin/get-all-category", config);
-      console.log(data.categories);
       return data.categories;
     } catch (error) {
       console.log(error.response.data);
@@ -68,5 +67,6 @@ const adminSlice = createSlice({
 });
 
 export const adminReducer = adminSlice.reducer;
-export const { setCategory, updateCategory,deleteCategory } = adminSlice.actions;
+export const { setCategory, updateCategory, deleteCategory } =
+  adminSlice.actions;
 export const adminSelector = (state) => state.adminReducer;

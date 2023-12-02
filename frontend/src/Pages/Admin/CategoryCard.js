@@ -60,7 +60,7 @@ const CategoryCard = ({ category }) => {
   };
   return (
     <>
-      <div>
+      <div className="categoryCardContainer ">
         {showInput ? (
           <div className="flex gap-2 justify-between">
             <input
@@ -77,8 +77,15 @@ const CategoryCard = ({ category }) => {
             </button>
           </div>
         ) : (
-          `${category.name}`
+          <p className="text-center font-semibold text-2xl">
+            {category.name}
+          </p>
         )}
+      </div>
+      <div className="sizesContainer flex items-center justify-evenly ">
+        {category.sizes.map((size) => (
+          <div className="singleSize rounded-[50%] p-2 bg-bgTwo text-textFour">{size}</div>
+        ))}
       </div>
       <div className="butttonsContainer w-full flex items-center gap-4 justify-center text-sm sm:text-lg">
         <button
