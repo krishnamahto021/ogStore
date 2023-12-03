@@ -70,7 +70,7 @@ const CreateProduct = () => {
       );
       if (data.success) {
         toast.success(`${productData.name} Added successfully`);
-        dispatch(setProduct(productData));
+        dispatch(setProduct(data.newProduct));
         clearInput();
       }
     } catch (error) {
@@ -176,9 +176,9 @@ const CreateProduct = () => {
             </div>
           </form>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 px-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 px-2">
           {products.map((product) => (
-            <ProductCard product={product} />
+            <ProductCard key={product._id} product={product} />
           ))}
         </div>
       </div>

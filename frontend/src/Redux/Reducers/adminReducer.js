@@ -86,7 +86,6 @@ const adminSlice = createSlice({
 
     deleteProduct: (state, action) => {
       const { id } = action.payload;
-      console.log(id);
       return {
         ...state,
         products: state.products.filter((p) => p._id !== id),
