@@ -17,9 +17,10 @@ import ProductCard from "./ProductCard";
 const CreateProduct = () => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
+  const [images, setImages] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [sizeQuantities, setSizeQuantities] = useState({});
+  const [previewImages, setPreviewImages] = useState([]);
   const dispatch = useDispatch();
 
   const { loggedInUser } = useSelector(userSelector);
@@ -33,7 +34,7 @@ const CreateProduct = () => {
 
   const handleCategoryChange = (selectedOption) => {
     setSelectedCategory(selectedOption);
-    setSizeQuantities({}); // Clear sizeQuantities when the category changes
+    setSizeQuantities({});
   };
 
   const handleSizeQuantityChange = (sizeId, quantity) => {
@@ -43,12 +44,59 @@ const CreateProduct = () => {
     });
   };
 
+  const handleImageUpload = async (files) => {
+    const uploadedImages = [];
+
+    for (const file of files) {
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "ogStore");
+      data.append("cloud_name", "ogstore");
+
+      try {
+        const response = await axios.post(
+          "https://api.cloudinary.com/v1_1/ogstore/image/upload",
+          data
+        );
+        const imageUrl = response.data.url.toString();
+        uploadedImages.push(imageUrl);
+      } catch (error) {
+        console.error("Error in uploading image:", error);
+      }
+    }
+
+    setImages(uploadedImages);
+  };
+
+  const handleImageChange = async (e) => {
+    const files = e.target.files;
+    const previewImagesArray = [];
+
+    const uploadPromises = Array.from(files).map((file) => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          previewImagesArray.push(event.target.result);
+          resolve();
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    await Promise.all(uploadPromises);
+
+    setPreviewImages(previewImagesArray);
+    handleImageUpload(files);
+  };
+
   const clearInput = () => {
     setName("");
-    setImage("");
+    setImages([]);
     setPrice("");
     setSelectedCategory("");
+    setPreviewImages([]);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -56,18 +104,21 @@ const CreateProduct = () => {
         size: parseInt(size),
         quantity: parseInt(sizeQuantities[size]),
       }));
+
       const productData = {
         name,
         price: parseInt(price),
-        image,
+        images,
         category: selectedCategory.value,
         sizes: sizesPayload,
       };
+
       const { data } = await axios.post(
         `/admin/create-product`,
         productData,
         config
       );
+
       if (data.success) {
         toast.success(`${productData.name} Added successfully`);
         dispatch(setProduct(data.newProduct));
@@ -82,6 +133,7 @@ const CreateProduct = () => {
     dispatch(getInitialState(config));
     dispatch(getInitialProducts(config));
   }, []);
+
   return (
     <Layout>
       <div className="flex flex-col justify-between gap-2">
@@ -111,14 +163,26 @@ const CreateProduct = () => {
             </div>
 
             <div className="flex flex-col gap-2 justify-between">
-              <label htmlFor="image">Image URL</label>
+              <label htmlFor="images">Images</label>
               <input
-                type="text"
+                type="file"
+                accept="image/*"
+                multiple
+                placeholder="Select up to 3 images"
                 className="p-1 rounded-sm bg-bgOne focus:outline-none"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
+                onChange={handleImageChange}
                 required
               />
+              <div className="flex space-x-2">
+                {previewImages.map((preview, index) => (
+                  <img
+                    key={index}
+                    src={preview}
+                    alt={`Preview ${index + 1}`}
+                    className="max-h-20"
+                  />
+                ))}
+              </div>
             </div>
 
             <div className="flex flex-col gap-2 justify-between">
@@ -133,6 +197,7 @@ const CreateProduct = () => {
                 onChange={handleCategoryChange}
               />
             </div>
+
             <div className="flex gap-4">
               <div className="flex flex-col gap-2">
                 <label className="text-left">Sizes</label>

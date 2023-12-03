@@ -25,8 +25,9 @@ const productModel = mongoose.Schema({
     type: Number,
     required: true,
   },
-  image: {
-    type: String,
+  images: {
+    type: Array,
+    required: true,
   },
   category: {
     type: mongoose.ObjectId,

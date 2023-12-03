@@ -118,11 +118,11 @@ module.exports.deleteCategory = async (req, res) => {
 // product api
 module.exports.createProduct = async (req, res) => {
   try {
-    const { name, image, price, category, sizes } = req.body;
+    const { name, images, price, category, sizes } = req.body;
     const newProduct = await Product.create({
       name,
       price,
-      image,
+      images,
       category,
       sizes,
       slug: slugify(name),

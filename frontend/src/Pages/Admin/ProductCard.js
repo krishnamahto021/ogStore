@@ -13,7 +13,7 @@ import {
 } from "../../Redux/Reducers/adminReducer";
 
 const ProductCard = ({ product }) => {
-  const { name, price, image, sizes } = product;
+  const { name, price, images, sizes } = product;
   const { loggedInUser } = useSelector(userSelector);
   const [edit, setEdit] = useState(false);
   const [newName, setNewName] = useState(name);
@@ -34,7 +34,6 @@ const ProductCard = ({ product }) => {
         { name: newName, price: newPrice },
         config
       );
-      console.log(data.product);
       if (data.success) {
         toast.success(`Updated ${name}`);
         dispatch(
@@ -91,7 +90,11 @@ const ProductCard = ({ product }) => {
         )}
       </div>
       <div className="w-full p-1 h-44 ">
-        <img className="w-full h-full object-cover " src={image} alt={name} />
+        <img
+          className="w-full h-full object-cover "
+          src={images[0]}
+          alt={name}
+        />
       </div>
 
       <div className="md:px-1 flex  items-center justify-evenly">
