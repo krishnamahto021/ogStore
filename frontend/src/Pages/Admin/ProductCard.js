@@ -11,6 +11,7 @@ import {
   deleteProduct,
   updateProduct,
 } from "../../Redux/Reducers/adminReducer";
+import SliderComponent from "../../Components/Slider";
 
 const ProductCard = ({ product }) => {
   const { name, price, images, sizes } = product;
@@ -67,7 +68,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <div className="productCard  max-w-xs flex flex-col gap-1 justify-between rounded overflow-hidden shadow-lg relative">
-      <div className="absolute top-2 right-1 flex justify-around text-2xl">
+      <div className="absolute top-2 right-1 flex justify-around text-2xl z-20">
         {edit ? (
           <>
             <BiSolidEdit className="cursor-pointer" onClick={handleUpdate} />
@@ -90,11 +91,7 @@ const ProductCard = ({ product }) => {
         )}
       </div>
       <div className="w-full p-1 h-44 ">
-        <img
-          className="w-full h-full object-cover "
-          src={images[0]}
-          alt={name}
-        />
+        <SliderComponent data={product} />
       </div>
 
       <div className="md:px-1 flex  items-center justify-evenly">
