@@ -38,7 +38,9 @@ const Header = () => {
             <NavLink to={`/${c.slug}/${c._id}`}>{c.name}</NavLink>
           ))}
           <NavLink to="/shop-all">All</NavLink>
-          <NavLink to="/admin">Admin</NavLink>
+          {loggedInUser.role === 1 ? (
+            <NavLink to="/admin">Admin</NavLink>
+          ) : null}
         </div>
         <div className="loginOrCartContainer">
           {

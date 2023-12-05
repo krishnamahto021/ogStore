@@ -9,7 +9,7 @@ const AdminDashboard = () => {
   return (
     <Layout>
       <div className="flex  ">
-        <AdminSideBar />
+        {loggedInUser.role === 1 ? <AdminSideBar /> : <></>}
         <div>Hi {loggedInUser.name} </div>
       </div>
     </Layout>

@@ -9,10 +9,8 @@ import ProductCard from "../Admin/ProductCard";
 
 const ShopAll = () => {
   const { products } = useSelector(adminSelector);
-  console.log(products);
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log("hi");
     dispatch(getInitialProducts());
   }, []);
   return (

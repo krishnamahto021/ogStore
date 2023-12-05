@@ -89,6 +89,7 @@ module.exports.signIn = async (req, res) => {
       user: {
         name: user.name,
         email,
+        role:user.role,
         address: user.address,
         phone: user.phone,
         jwtToken,
