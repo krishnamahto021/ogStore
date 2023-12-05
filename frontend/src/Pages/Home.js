@@ -1,5 +1,6 @@
 import React from "react";
 import Layout from "../Components/Layouts/Layout";
+import ShopAll from "./Product/ShopAll";
 
 const Home = () => {
   return (
@@ -11,7 +12,9 @@ const Home = () => {
         "Discover a wide range of premium quality sneakers at ogStore. Find the latest styles and trends in high-quality footwear."
       }
     >
-      home page
+      <div className="-mt-56 sm:-mt-40">
+        <ShopAll />
+      </div>
     </Layout>
   );
 };

@@ -187,6 +187,30 @@ module.exports.fetchSingleProduct = async (req, res) => {
   }
 };
 
+module.exports.fetchProductsByCategory = async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const products = await Product.find({ category: cid });
+    if (!products) {
+      return res.status(400).send({
+        success: false,
+        message: "No Products Found",
+      });
+    } else {
+      return res.status(200).send({
+        success: true,
+        products,
+        message: "Fetched all products of selected Category",
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
 module.exports.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;

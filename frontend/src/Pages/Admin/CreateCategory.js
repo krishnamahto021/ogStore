@@ -7,7 +7,7 @@ import { userSelector } from "../../Redux/Reducers/userReducer";
 import { toast } from "react-toastify";
 import {
   adminSelector,
-  getInitialState,
+  getInitialCategories,
   setCategory,
 } from "../../Redux/Reducers/adminReducer";
 import CategoryCard from "./CategoryCard";
@@ -49,7 +49,7 @@ const CreateCategory = () => {
   };
 
   useEffect(() => {
-    dispatch(getInitialState(config));
+    dispatch(getInitialCategories(config));
   }, []);
   return (
     <Layout>

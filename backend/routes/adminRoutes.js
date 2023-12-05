@@ -41,6 +41,11 @@ router.get("/fetch-product", adminController.fetchAllProduct);
 
 router.get("/fetch-product/:id", adminController.fetchSingleProduct);
 
+router.get(
+  "/fetch-product-by-category/:cid",
+  adminController.fetchProductsByCategory
+);
+
 router.post(
   "/update-product/:id",
   passport.authenticate("jwt", { session: false }),

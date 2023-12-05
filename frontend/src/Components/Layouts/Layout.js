@@ -4,12 +4,14 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { useDispatch } from "react-redux";
 import { authorizeUser } from "../../Redux/Reducers/userReducer";
+import { getInitialCategories } from "../../Redux/Reducers/adminReducer";
 
 const Layout = ({ children, title, description, keywords, author }) => {
   const dispatch = useDispatch();
-    useEffect(() => {
-      dispatch(authorizeUser());
-    }, [dispatch]);
+  useEffect(() => {
+    dispatch(authorizeUser());
+    dispatch(getInitialCategories());
+  }, [dispatch]);
   return (
     <div>
       <Helmet>

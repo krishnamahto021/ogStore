@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   adminSelector,
   getInitialProducts,
-  getInitialState,
+  getInitialCategories,
   setProduct,
 } from "../../Redux/Reducers/adminReducer";
 import Select from "react-select";
@@ -130,8 +130,8 @@ const CreateProduct = () => {
   };
 
   useEffect(() => {
-    dispatch(getInitialState(config));
-    dispatch(getInitialProducts(config));
+    dispatch(getInitialCategories());
+    dispatch(getInitialProducts());
   }, []);
 
   return (

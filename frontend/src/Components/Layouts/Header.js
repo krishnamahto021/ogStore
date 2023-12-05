@@ -7,9 +7,11 @@ import { RxCross1 } from "react-icons/rx";
 import { Link, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { userSelector } from "../../Redux/Reducers/userReducer";
+import { adminSelector } from "../../Redux/Reducers/adminReducer";
 
 const Header = () => {
   const { loggedInUser } = useSelector(userSelector);
+  const { categories } = useSelector(adminSelector);
   const [showHam, setShowHam] = useState(true);
   const [showSearch, setShowSearch] = useState(false);
   return (
@@ -21,20 +23,20 @@ const Header = () => {
       </div>
       <div className="bg-bgOne h-12   sm:w-screen flex items-center justify-between text-textOne p-1 text-lg font-semibold md:text-2xl">
         <div className="logoContainer flex items-center gap-2 justify-between">
-          <div className="hamburgerMenu md:hidden  ">
+          <div className="hamburgerMenu md:hidden p-1 ">
             <RxHamburgerMenu
               onClick={() => setShowHam(!showHam)}
               className="text-4xl cursor-pointer"
             />
           </div>
-          <Link to="/" className="text-3xl md:text-4xl cursor-pointer ">
+          <Link to="/" className="text-3xl md:text-4xl p-1 cursor-pointer ">
             ogStore
           </Link>
         </div>
         <div className="itemsContainer  items-center gap-6 justify-evenly hidden md:flex">
-          <NavLink to="/for-him">Him</NavLink>
-          <NavLink to="/for-her">Her</NavLink>
-          <NavLink to="/unisex">Unisex</NavLink>
+          {categories.map((c) => (
+            <NavLink to={`/${c.slug}/${c._id}`}>{c.name}</NavLink>
+          ))}
           <NavLink to="/shop-all">All</NavLink>
           <NavLink to="/admin">Admin</NavLink>
         </div>
@@ -78,10 +80,11 @@ const Header = () => {
         ) : (
           <></>
         )}
-        <NavLink to="/for-him">Him</NavLink>
-        <NavLink to="/for-her">Her</NavLink>
-        <NavLink to="/unisex">Unisex</NavLink>
+        {categories.map((c) => (
+          <NavLink to={`/${c.slug}/${c._id}`}>{c.name}</NavLink>
+        ))}
         <NavLink to="/shop-all">All</NavLink>
+        <NavLink to="/admin">Admin</NavLink>
       </div>
     </div>
   );

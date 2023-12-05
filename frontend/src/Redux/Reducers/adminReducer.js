@@ -5,9 +5,10 @@ import { toast } from "react-toastify";
 const initialState = {
   categories: [],
   products: [],
+  productsByCategory: [],
 };
 
-export const getInitialState = createAsyncThunk(
+export const getInitialCategories = createAsyncThunk(
   "admin/add-category",
   async (config, thunkAPI) => {
     try {
@@ -24,11 +25,27 @@ export const getInitialState = createAsyncThunk(
   }
 );
 
+export const getInitialProductsByCategories = createAsyncThunk(
+  "/fetch-product-by-category",
+  async (cid, thunkAPI) => {
+    try {
+      const { data } = await axios.get(
+        `/admin/fetch-product-by-category/${cid}`
+      );
+      if (data.success) {
+        return data.products;
+      }
+    } catch (error) {
+      toast.error(`Something Went wrong !!`);
+    }
+  }
+);
+
 export const getInitialProducts = createAsyncThunk(
   "admin/fetch-product",
-  async (config, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
-      const { data } = await axios.get("/admin/fetch-product", config);
+      const { data } = await axios.get("/admin/fetch-product");
       return data.products;
     } catch (error) {
       toast.error(`Something Went Wrong`);
@@ -94,7 +111,7 @@ const adminSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getInitialState.fulfilled, (state, action) => {
+      .addCase(getInitialCategories.fulfilled, (state, action) => {
         return {
           ...state,
           categories: [...action.payload],
@@ -104,6 +121,12 @@ const adminSlice = createSlice({
         return {
           ...state,
           products: [...action.payload],
+        };
+      })
+      .addCase(getInitialProductsByCategories.fulfilled, (state, action) => {
+        return {
+          ...state,
+          productsByCategory: [...action.payload],
         };
       });
   },
