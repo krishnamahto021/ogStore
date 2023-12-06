@@ -66,7 +66,7 @@ const ProductCard = ({ product }) => {
     }
   };
   return (
-    <div className="productCard  max-w-xs flex flex-col gap-1 justify-between rounded overflow-hidden shadow-lg relative">
+    <div className="productCard bg-bgThree max-w-xs flex flex-col gap-1 justify-between rounded overflow-hidden shadow-lg relative">
       <div
         className={`absolute top-2 right-1 flex justify-around text-2xl z-20 ${loggedInUser.role === 1 ? "block":"hidden"}`}
       >

@@ -5,15 +5,33 @@ import { CiUser } from "react-icons/ci";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { RxCross1 } from "react-icons/rx";
 import { Link, NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "../../Redux/Reducers/userReducer";
-import { adminSelector } from "../../Redux/Reducers/adminReducer";
+import {
+  adminSelector,
+  setSearchProduct,
+  setShowSearchScreen,
+} from "../../Redux/Reducers/adminReducer";
+import { searchProduct } from "../../Api/agolia";
 
 const Header = () => {
   const { loggedInUser } = useSelector(userSelector);
   const { categories } = useSelector(adminSelector);
   const [showHam, setShowHam] = useState(true);
+  const [query, setQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
+  const dispatch = useDispatch();
+  const handleSearch = async () => {
+    try {
+      const results = await searchProduct(query);
+      dispatch(setSearchProduct(results));
+      dispatch(setShowSearchScreen());
+      setQuery("");
+      setShowSearch(!showSearch);
+    } catch (error) {
+      console.log(`Error in searching products ${error}`);
+    }
+  };
   return (
     <div className="fixed top-0 z-40">
       <div className="offerSection   flex text-2xl h-14 sm:h-7 md:text-lg w-screen items-center justify-around bg-black text-textTwo">
@@ -64,7 +82,13 @@ const Header = () => {
       >
         <input
           placeholder="Search your kick...."
-          className="focus:outline-none bg-bgFour text-textThree rounded-sm p-2 w-screen"
+          className="relative focus:outline-none bg-bgFour text-textThree rounded-sm p-2 w-screen"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <BsSearch
+          className="duration-200 text-2xl absolute right-6 top-[7rem] sm:top-20 cursor-pointer m-1 "
+          onClick={handleSearch}
         />
       </div>
       <div
@@ -86,7 +110,7 @@ const Header = () => {
           <NavLink to={`/${c.slug}/${c._id}`}>{c.name}</NavLink>
         ))}
         <NavLink to="/shop-all">All</NavLink>
-        <NavLink to="/admin">Admin</NavLink>
+        {loggedInUser.role === 1 ? <NavLink to="/admin">Admin</NavLink> : null}
       </div>
     </div>
   );

@@ -1,11 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { indexProducts } from "../../Api/agolia";
 
 const initialState = {
   categories: [],
   products: [],
+  searchResults: [],
   productsByCategory: [],
+  showSearchScreen: false,
 };
 
 export const getInitialCategories = createAsyncThunk(
@@ -108,6 +111,18 @@ const adminSlice = createSlice({
         products: state.products.filter((p) => p._id !== id),
       };
     },
+    setSearchProduct: (state, action) => {
+      return {
+        ...state,
+        searchResults: [...action.payload],
+      };
+    },
+    setShowSearchScreen: (state, action) => {
+      return {
+        ...state,
+        showSearchScreen: !state.showSearchScreen,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -118,10 +133,16 @@ const adminSlice = createSlice({
         };
       })
       .addCase(getInitialProducts.fulfilled, (state, action) => {
-        return {
+        // Update products state
+        const newState = {
           ...state,
           products: [...action.payload],
         };
+
+        // Call indexProducts to update Algolia index
+        indexProducts(newState.products);
+
+        return newState;
       })
       .addCase(getInitialProductsByCategories.fulfilled, (state, action) => {
         return {
@@ -140,5 +161,7 @@ export const {
   setProduct,
   updateProduct,
   deleteProduct,
+  setSearchProduct,
+  setShowSearchScreen
 } = adminSlice.actions;
 export const adminSelector = (state) => state.adminReducer;
