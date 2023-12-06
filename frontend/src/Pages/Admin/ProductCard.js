@@ -66,9 +66,11 @@ const ProductCard = ({ product }) => {
     }
   };
   return (
-    <div className="productCard bg-bgThree max-w-xs flex flex-col gap-1 justify-between rounded overflow-hidden shadow-lg relative">
+    <div className="productCard bg-bgThree max-w-xs h-[22rem] flex flex-col gap-1 justify-around rounded overflow-hidden shadow-lg relative">
       <div
-        className={`absolute top-2 right-1 flex justify-around text-2xl z-20 ${loggedInUser.role === 1 ? "block":"hidden"}`}
+        className={`absolute top-2 right-1 flex justify-around text-2xl z-20 ${
+          loggedInUser.role === 1 ? "block" : "hidden"
+        }`}
       >
         {edit ? (
           <>
@@ -119,7 +121,7 @@ const ProductCard = ({ product }) => {
       </div>
 
       <div className="flex justify-around p-1">
-        <div className="max-w-[12rem] flex flex-wrap content-center">
+        <div className="max-w-[10rem]  flex flex-wrap ">
           {sizes.map((size) => (
             <div
               key={size.size}
