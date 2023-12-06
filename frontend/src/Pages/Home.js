@@ -8,13 +8,24 @@ import {
 } from "../Redux/Reducers/adminReducer";
 import SearchResults from "../Components/SearchResults";
 import { createPortal } from "react-dom";
+import HomeSlider from "../Components/HomeSlider";
 
 const Home = () => {
   const { products, showSearchScreen } = useSelector(adminSelector);
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getInitialProducts());
   }, []);
+
+  const getFirst10Products = () => {
+    return products
+      .slice()
+      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+      .slice(0, 10); // Get the first 10 items
+  };
+
+  const first10Products = getFirst10Products();
   return (
     <Layout
       title={"Premium Quality Sneakers | ogStore"}
@@ -24,15 +35,17 @@ const Home = () => {
         "Discover a wide range of premium quality sneakers at ogStore. Find the latest styles and trends in high-quality footwear."
       }
     >
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 px-2">
-        {products.length > 0 ? (
-          products.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))
-        ) : (
-          <p>No Products</p>
-        )}
+      <div className="flex flex-col gap-2 ">
+        <div className="latestRelease">
+          <div className="font-extrabold text-xl">Latest Drops !!</div>
+          <HomeSlider data={first10Products} />
+        </div>
+        <div className="everGreen">
+          <div className="font-extrabold text-xl">All time Favorites 😻 </div>
+          <HomeSlider data={first10Products} />
+        </div>
       </div>
+
       {showSearchScreen &&
         createPortal(
           <SearchResults />,

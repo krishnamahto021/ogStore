@@ -18,7 +18,7 @@ const SearchResults = () => {
         className="modalWrapper fixed top-0 left-0 right-0  bg-[rgba(0,0,0,0.7)]  h-screen z-50 "
         onClick={handleShowSearchScreen}
       ></div>
-      <div className="resultContainer flex  items-center justify-center w-fit h-full text-textOne absolute top-4 ">
+      <div className="resultContainer flex p-2  items-center justify-center w-fit h-full text-textOne absolute top-[10vh]">
         <p
           className="text-center text-red-700 hover:scale-110 duration-150 text-4xl font-bold cursor-pointer fixed right-0 top-0 p-2 z-50 "
           onClick={handleShowSearchScreen}
@@ -26,7 +26,7 @@ const SearchResults = () => {
           X
         </p>
         {searchResults?.length > 0 ? (
-          <div className="max-w-screen  grid  gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 z-50 p-2">
+          <div className="max-w-screen m-auto grid  gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 z-50 p-2">
             {searchResults?.map((p) => (
               <ProductCard product={p} />
             ))}

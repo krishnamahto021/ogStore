@@ -119,16 +119,16 @@ const ProductCard = ({ product }) => {
       </div>
 
       <div className="flex justify-around p-1">
-        <div className="flex flex-wrap ">
+        <div className="max-w-[12rem] flex flex-wrap content-center">
           {sizes.map((size) => (
-            <span
+            <div
               key={size.size}
               className={`inline-block ${
                 size.quantity !== 0 ? "" : "line-through text-red-500"
-              } bg-bgThree rounded-full px-1 py-1 text-sm font-semibold text-textFour mr-2 mb-2`}
+              } bg-bgOne rounded-full px-1 py-1 text-sm font-semibold text-textFour mr-2 mb-2`}
             >
               {`${size.size}`}
-            </span>
+            </div>
           ))}
         </div>
       </div>

@@ -82,6 +82,7 @@ const Header = () => {
       >
         <input
           placeholder="Search your kick...."
+          required
           className="relative focus:outline-none bg-bgFour text-textThree rounded-sm p-2 w-screen"
           value={query}
           onChange={(e) => setQuery(e.target.value)}

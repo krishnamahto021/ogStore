@@ -9,9 +9,11 @@ const SliderComponent = ({ data }) => {
     infinte: true,
     accessibility: true,
     speed: 500,
-    arrows: true,
+    arrows: false,
     slidesToShow: 1,
     slidesToScroll: 1,
+    dots: true,
+    swipeToSlide: true,
   };
   return (
     <>
@@ -43,6 +45,9 @@ const SliderComponent = ({ data }) => {
     .slick-next:before {
     content: '→';
     color: black;
+}
+.slick-dots{
+  bottom:7px;
 }
       `}</style>
     </>
