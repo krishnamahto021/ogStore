@@ -7,11 +7,13 @@ import {
   getInitialProductsByCategories,
 } from "../../Redux/Reducers/adminReducer";
 import ProductCard from "../Admin/ProductCard";
+import { createPortal } from "react-dom";
+import SearchResults from "../../Components/SearchResults";
 
 const Him = () => {
   const dispatch = useDispatch();
   const { cid } = useParams();
-  const { productsByCategory } = useSelector(adminSelector);
+  const { productsByCategory, showSearchScreen } = useSelector(adminSelector);
   useEffect(() => {
     dispatch(getInitialProductsByCategories(cid));
   }, []);
@@ -33,6 +35,11 @@ const Him = () => {
           <p>No Products</p>
         )}
       </div>
+      {showSearchScreen &&
+        createPortal(
+          <SearchResults />,
+          document.querySelector(".modalContainer")
+        )}
     </Layout>
   );
 };

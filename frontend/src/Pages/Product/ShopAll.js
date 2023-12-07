@@ -6,9 +6,11 @@ import {
   getInitialProducts,
 } from "../../Redux/Reducers/adminReducer";
 import ProductCard from "../Admin/ProductCard";
+import { createPortal } from "react-dom";
+import SearchResults from "../../Components/SearchResults";
 
 const ShopAll = () => {
-  const { products } = useSelector(adminSelector);
+  const { products, showSearchScreen } = useSelector(adminSelector);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getInitialProducts());
@@ -33,6 +35,11 @@ const ShopAll = () => {
           <p>No Products</p>
         )}
       </div>
+      {showSearchScreen &&
+        createPortal(
+          <SearchResults />,
+          document.querySelector(".modalContainer")
+        )}
     </Layout>
   );
 };

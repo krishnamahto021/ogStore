@@ -7,11 +7,13 @@ import {
   getInitialProductsByCategories,
 } from "../../Redux/Reducers/adminReducer";
 import ProductCard from "../Admin/ProductCard";
+import { createPortal } from "react-dom";
+import SearchResults from "../../Components/SearchResults";
 
 const Unisex = () => {
   const dispatch = useDispatch();
   const { cid } = useParams();
-  const { productsByCategory } = useSelector(adminSelector);
+  const { productsByCategory, showSearchScreen } = useSelector(adminSelector);
   useEffect(() => {
     dispatch(getInitialProductsByCategories(cid));
   }, []);
@@ -28,12 +30,19 @@ const Unisex = () => {
       }
     >
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 px-2">
-        {productsByCategory.length>0?productsByCategory.map((product) => (
-          <ProductCard key={product._id} product={product} />
-        )):<p>
-          No Products
-        </p>}
+        {productsByCategory.length > 0 ? (
+          productsByCategory.map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))
+        ) : (
+          <p>No Products</p>
+        )}
       </div>
+      {showSearchScreen &&
+        createPortal(
+          <SearchResults />,
+          document.querySelector(".modalContainer")
+        )}
     </Layout>
   );
 };
