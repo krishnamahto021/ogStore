@@ -3,6 +3,7 @@ const {
 } = require("../mailers/forgottenPasswordMailer");
 const { verifyUserEmail } = require("../mailers/verifyUserEmail");
 const User = require("../models/userSchema");
+const Product = require("../models/productSchema");
 const passwordHelper = require("../utils/passwordHelper");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
@@ -89,7 +90,7 @@ module.exports.signIn = async (req, res) => {
       user: {
         name: user.name,
         email,
-        role:user.role,
+        role: user.role,
         address: user.address,
         phone: user.phone,
         jwtToken,
@@ -180,6 +181,105 @@ module.exports.updatePassword = async (req, res) => {
     return res.status(200).send({
       success: true,
       message: "Password updated Successfully",
+    });
+  }
+};
+
+// add to cart
+module.exports.addToCart = async (req, res) => {
+  try {
+    const { pId, size, quantity } = req.body;
+    const product = await Product.findById(pId);
+    const intSize = parseFloat(size);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
+    }
+    const selectedSize = product.sizes.find((s) => s.size === intSize);
+    if (selectedSize.quantity < quantity) {
+      return res.status(400).json({
+        success: false,
+        message: "Insufficient stock",
+      });
+    }
+
+    const user = req.user;
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    // Check if the product is already in the cart
+    const existingCartItemIndex = user.cart.findIndex(
+      (cartItem) => cartItem.product.equals(pId) && cartItem.size === intSize
+    );
+    if (existingCartItemIndex !== -1) {
+      if (user.cart[existingCartItemIndex].quantity > selectedSize.quantity) {
+        await user.save();
+        return res.status(202).json({
+          success: true,
+          message: "Insufficient Stock",
+          cart: user.cart,
+        });
+      } else {
+        user.cart[existingCartItemIndex].quantity += parseFloat(quantity);
+        await user.save();
+        return res.status(201).json({
+          success: true,
+          message: "Updated Quantity",
+          cart: user.cart,
+        });
+      }
+    } else {
+      user.cart.push({ product: pId, size, quantity });
+      await user.save();
+      return res.status(200).json({
+        success: true,
+        message: "Product added to the cart",
+        cart: user.cart,
+      });
+    }
+  } catch (error) {
+    console.log(`Error in adding cart items: ${error}`);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports.fetchCartItems = async (req, res) => {
+  try {
+    const userId = req.user._id; // Assuming req.user contains the authenticated user
+    const user = await User.findById(userId).populate("cart.product");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const cartItems = user.cart.map((cartItem) => ({
+      product: {
+        _id: cartItem.product._id,
+        name: cartItem.product.name,
+        price: cartItem.product.price,
+        sizes: cartItem.product.sizes, // Include sizes in the response
+        // Add other product details as needed
+      },
+      quantity: cartItem.quantity,
+      size: cartItem.size,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      cartItems: cartItems,
+    });
+  } catch (error) {
+    console.error(`Error in fetching cart items: ${error}`);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
     });
   }
 };

@@ -31,6 +31,12 @@ const userSlice = createSlice({
         redirectPath: action.payload,
       };
     },
+    setCart: (state, action) => {
+      return {
+        ...state,
+        cart: [...action.payload],
+      };
+    },
   },
 });
 

@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import Layout from "../Components/Layouts/Layout";
-import ProductCard from "./Admin/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import {
   adminSelector,
@@ -9,12 +8,16 @@ import {
 import SearchResults from "../Components/SearchResults";
 import { createPortal } from "react-dom";
 import HomeSlider from "../Components/HomeSlider";
+import {
+  authorizeUser,
+} from "../Redux/Reducers/userReducer";
 
 const Home = () => {
   const { products, showSearchScreen } = useSelector(adminSelector);
 
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(authorizeUser());
     dispatch(getInitialProducts());
   }, []);
 

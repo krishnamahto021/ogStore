@@ -19,4 +19,16 @@ router.get(
   userController.checkAuth
 );
 
+router.post(
+  "/add-to-cart",
+  passport.authenticate("jwt", { session: false }),
+  userController.addToCart
+);
+
+router.get(
+  "/fetch-cart-items",
+  passport.authenticate("jwt", { session: false }),
+  userController.fetchCartItems
+);
+
 module.exports = router;

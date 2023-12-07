@@ -9,12 +9,19 @@ const userModel = mongoose.Schema(
     isVerified: { type: Boolean, default: false },
     phone: {
       type: Number,
-      requied: true,
+      required: true,
     },
     address: {
       type: String,
       requied: true,
     },
+    cart: [
+      {
+        product: { type: mongoose.ObjectId, ref: "Product" },
+        quantity: { type: Number },
+        size: { type: Number },
+      },
+    ],
     role: { type: Number, default: 0 },
   },
   { timestamps: true }
