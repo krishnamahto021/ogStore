@@ -1,7 +1,7 @@
 import algoliasearch from "algoliasearch";
-const ALGOLIA_API_ID = "M5H0L3Q5G6";
-const ALGOLIA_API_KEY = "eaf84a19c4bb36a6403b1131b507776a";
-const ALGOLIA_INDEX_NAME = "ogStore";
+const ALGOLIA_API_ID = process.env.REACT_APP_ALGOLIA_API_ID;
+const ALGOLIA_API_KEY = process.env.REACT_APP_ALGOLIA_API_KEY;
+const ALGOLIA_INDEX_NAME = process.env.REACT_APP_ALGOLIA_INDEX_NAME;
 
 const client = algoliasearch(ALGOLIA_API_ID, ALGOLIA_API_KEY);
 
