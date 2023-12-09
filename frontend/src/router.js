@@ -31,6 +31,7 @@ import AllOrders from "./Pages/Admin/AllOrders";
 import CreateCategory from "./Pages/Admin/CreateCategory";
 import CreateProduct from "./Pages/Admin/CreateProduct";
 import Orders from "./Pages/User/Orders";
+import CartPage from "./Pages/User/CartPage";
 
 export const ProtectedRouteHome = ({ element }) => {
   const { loggedInUser } = useSelector(userSelector);
@@ -110,7 +111,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/user/orders",
-    element: <Orders />,
+    element: <ProtectedRouteHome element={<Orders />} />,
+  },
+  {
+    path: "/user/cart",
+    element: <ProtectedRouteHome element={<CartPage />} />,
   },
 
   // admin routes

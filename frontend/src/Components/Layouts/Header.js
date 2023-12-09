@@ -67,7 +67,13 @@ const Header = () => {
                 onClick={() => setShowSearch(!showSearch)}
                 className="duration-200"
               />
-              {loggedInUser.jwtToken ? <BsCart /> : <></>}
+              {loggedInUser.jwtToken ? (
+                <Link to="/user/cart">
+                  <BsCart />
+                </Link>
+              ) : (
+                <></>
+              )}
               <Link to={loggedInUser.jwtToken ? "/user/profile" : "/sign-in"}>
                 <CiUser className="mr-4" />
               </Link>

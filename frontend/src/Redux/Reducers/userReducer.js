@@ -1,10 +1,29 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 import { toast } from "react-toastify";
 
 const initialState = {
   loggedInUser: {},
   redirectPath: null,
+  cartItems: [],
 };
+export const fetchCartItems = createAsyncThunk(
+  "user/fetch-cart-items",
+  async (config, thunkAPI) => {
+    try {
+      const { data } = await axios.get("/user/fetch-cart-items", config);
+      if (data.success) {
+        return data.cartItems;
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error(`Something went wrong`);
+      } else {
+        toast.error(`Internal server error`);
+      }
+    }
+  }
+);
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -34,12 +53,35 @@ const userSlice = createSlice({
     setCart: (state, action) => {
       return {
         ...state,
-        cart: [...action.payload],
+        cartItems: [action.payload, ...state.cartItems],
       };
     },
+    updateCart: (state, action) => {
+      const updatedPrdouct = state.cartItems.map((item) =>
+        item._id === action.payload.product._id ? action.payload.product : item
+      );
+      return {
+        ...state,
+        cartItems: updatedPrdouct,
+      };
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchCartItems.fulfilled, (state, action) => {
+      return {
+        ...state,
+        cartItems: [...action.payload],
+      };
+    });
   },
 });
 
 export const userReducer = userSlice.reducer;
-export const { authorizeUser, setRedirectPath, logOutUser } = userSlice.actions;
+export const {
+  authorizeUser,
+  setRedirectPath,
+  logOutUser,
+  setCart,
+  updateCart,
+} = userSlice.actions;
 export const userSelector = (state) => state.userReducer;

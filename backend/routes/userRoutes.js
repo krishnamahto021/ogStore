@@ -31,4 +31,10 @@ router.get(
   userController.fetchCartItems
 );
 
+router.post(
+  "/update-cart",
+  passport.authenticate("jwt", { session: false }),
+  userController.updateCart
+);
+
 module.exports = router;

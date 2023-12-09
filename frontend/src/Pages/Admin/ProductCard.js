@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsCartPlusFill } from "react-icons/bs";
 import { AiFillThunderbolt } from "react-icons/ai";
 import { BiSolidEdit } from "react-icons/bi";
@@ -7,11 +7,13 @@ import { IoAddCircleOutline } from "react-icons/io5";
 import { FiMinusCircle } from "react-icons/fi";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { BsCartXFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setRedirectPath,
-  userSelector,
   setCart,
+  setRedirectPath,
+  updateCart,
+  userSelector,
 } from "../../Redux/Reducers/userReducer";
 import {
   deleteProduct,
@@ -21,16 +23,31 @@ import SliderComponent from "../../Components/Slider";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
+  const { loggedInUser, cartItems } = useSelector(userSelector);
+  const cartItem = cartItems.find((item) => item.product._id === product._id);
   const navigate = useNavigate();
   const location = useLocation();
   const { name, price, sizes } = product;
-  const { loggedInUser } = useSelector(userSelector);
   const [edit, setEdit] = useState(false);
   const [newName, setNewName] = useState(name);
   const [newPrice, setNewPrice] = useState(price);
   const dispatch = useDispatch();
-  const [size, setSize] = useState("");
-  const [quantity, setQuantity] = useState(1);
+  const [size, setSize] = useState(!cartItem ? "" : cartItem.size);
+  const [quantity, setQuantity] = useState(!cartItem ? 1 : cartItem.quantity);
+  const [swapSize, setSwapSize] = useState(false);
+
+  useEffect(() => {
+    // Update size and quantity when cartItem changes
+    if (swapSize) {
+      console.log(swapSize);
+      setSize(""); // Reset the size to an empty string if swapSize is true
+      setQuantity(1);
+    } else {
+      setSize(!cartItem ? "" : cartItem.size);
+    }
+    setQuantity(!cartItem ? 1 : cartItem.quantity);
+  }, [cartItem, swapSize]);
+
   const config = {
     headers: {
       "Content-type": "application/json",
@@ -39,11 +56,11 @@ const ProductCard = ({ product }) => {
   };
 
   const handleChangeQuantity = (operand) => {
-    //if 1 then add else sub
+    //if 1 then increase qty else decrease
     const selectedSize = sizes.find((s) => s.size === size);
     if (operand === 1) {
       if (quantity >= selectedSize.quantity) {
-        toast.error("No sufficient Stock");
+        toast.error("Insufficient Stock");
         return;
       }
       setQuantity(quantity + 1);
@@ -61,16 +78,29 @@ const ProductCard = ({ product }) => {
         toast.error(`Buy atleast 1 pair of sneaker for yourself 😃 `);
         return;
       }
-      console.log(quantity);
-      const { data } = await axios.post(
-        "/user/add-to-cart",
-        { pId: product._id, size, quantity },
-        config
+      const existingCartItem = cartItems.find(
+        (item) => item.product._id === product._id
       );
-      if (data.success) {
-        toast.success(`${data.message}`);
-        setSize("");
-        setQuantity(1);
+      if (existingCartItem) {
+        const { data } = await axios.post(
+          "/user/update-cart",
+          { pId: product._id, size, quantity },
+          config
+        );
+        if (data.success) {
+          toast.success(`${data.message}`);
+          dispatch(updateCart({ product, size, quantity }));
+        }
+      } else {
+        const { data } = await axios.post(
+          "/user/add-to-cart",
+          { pId: product._id, size, quantity },
+          config
+        );
+        if (data.success) {
+          toast.success(`${data.message}`);
+          dispatch(setCart({ product, size, quantity }));
+        }
       }
     } catch (error) {
       if (error.response) {
@@ -122,7 +152,7 @@ const ProductCard = ({ product }) => {
     }
   };
   return (
-    <div className="productCard bg-bgThree max-w-xs h-[22rem] flex flex-col gap-1 justify-around rounded overflow-hidden shadow-lg relative">
+    <div className="productCard p-1 m-1 bg-bgThree max-w-xs h-96 flex flex-col gap-1 justify-around rounded overflow-hidden shadow-lg relative">
       <div
         className={`absolute top-2 right-1 flex justify-around text-2xl z-20 ${
           loggedInUser.role === 1 ? "block" : "hidden"
@@ -177,44 +207,71 @@ const ProductCard = ({ product }) => {
       </div>
 
       <div className="flex justify-around p-1">
-        <div className="max-w-[10rem]  flex flex-wrap ">
-          {size ? (
-            <div className="flex gap-5 items-center justify-between">
-              <FiMinusCircle
-                className="cursor-pointer"
-                onClick={() => handleChangeQuantity(2)}
-              />
-              <p>{quantity}</p>
-              <IoAddCircleOutline
-                className="cursor-pointer"
-                onClick={() => handleChangeQuantity(1)}
-              />
-            </div>
-          ) : (
+        <div className=" flex flex-wrap max-w-[10rem] justify-center">
+          {size || cartItem ? (
             <>
               {sizes.map((size) => (
                 <div
                   key={size.size}
                   className={`inline-block ${
                     size.quantity !== 0 ? "" : "line-through text-red-500"
-                  } bg-bgOne cursor-pointer rounded-full px-1 py-1 text-sm font-semibold text-textFour mr-2 mb-2`}
+                  } bg-bgOne  cursor-pointer rounded-full px-1 py-1 text-sm font-semibold text-textFour mr-2 mb-2`}
                   onClick={() => setSize(size.size)}
                 >
                   {`${size.size}`}
                 </div>
               ))}
+              <div className="w-full flex  gap-4  items-center justify-center">
+                <p>{size ? size : cartItem.size}</p>
+                <FiMinusCircle
+                  className="cursor-pointer "
+                  onClick={() => handleChangeQuantity(2)}
+                />
+                <p>{quantity}</p>
+                <IoAddCircleOutline
+                  className="cursor-pointer "
+                  onClick={() => handleChangeQuantity(1)}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              {!cartItem
+                ? sizes.map((size) => (
+                    <div
+                      key={size.size}
+                      className={`inline-block ${
+                        size.quantity !== 0 ? "" : "line-through text-red-500"
+                      } bg-bgOne  cursor-pointer rounded-full px-1 py-1 text-sm font-semibold text-textFour mr-2 mb-2`}
+                      onClick={() => setSize(size.size)}
+                    >
+                      {`${size.size}`}
+                    </div>
+                  ))
+                : size}
             </>
           )}
         </div>
       </div>
       <div className="ctaContainer flex items-center flex-col gap-1 justify-between md:flex-row pb-2 px-2">
-        <button
-          type="submit"
-          onClick={addToCart}
-          className="p-2 flex items-center justify-center gap-2 w-full rounded-md bg-bgTwo text-textThree hover:bg-bgOne hover:text-textOne duration-300"
-        >
-          Add to Cart <BsCartPlusFill />
-        </button>
+        {!cartItem ? (
+          <button
+            type="submit"
+            onClick={addToCart}
+            className="p-2 flex items-center justify-center gap-2 w-full rounded-md bg-bgTwo text-textThree hover:bg-bgOne hover:text-textOne duration-300"
+          >
+            Add to Cart <BsCartPlusFill />
+          </button>
+        ) : (
+          <button
+            type="submit"
+            onClick={addToCart}
+            className="p-2  flex gap-2 items-center justify-center  w-full rounded-md bg-bgTwo text-textThree hover:bg-bgOne hover:text-textOne duration-300"
+          >
+            Update <BsCartXFill />
+          </button>
+        )}
+
         <button
           type="submit"
           className="p-2 flex items-center justify-center gap-2  w-full rounded-md bg-bgTwo text-textThree hover:bg-bgOne hover:text-textOne duration-300"

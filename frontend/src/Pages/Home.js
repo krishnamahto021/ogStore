@@ -10,17 +10,30 @@ import { createPortal } from "react-dom";
 import HomeSlider from "../Components/HomeSlider";
 import {
   authorizeUser,
+  fetchCartItems,
+  userSelector,
 } from "../Redux/Reducers/userReducer";
 
 const Home = () => {
   const { products, showSearchScreen } = useSelector(adminSelector);
-
+  const { loggedInUser } = useSelector(userSelector);
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${loggedInUser.jwtToken}`,
+    },
+  };
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(authorizeUser());
     dispatch(getInitialProducts());
   }, []);
 
+  useEffect(() => {
+    if (loggedInUser.jwtToken) {
+      dispatch(fetchCartItems(config));
+    }
+  }, [loggedInUser]);
   const getFirst10Products = () => {
     return products
       .slice()

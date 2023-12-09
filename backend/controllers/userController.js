@@ -185,7 +185,7 @@ module.exports.updatePassword = async (req, res) => {
   }
 };
 
-// add to cart
+// add to cart and updating cart based on qty
 module.exports.addToCart = async (req, res) => {
   try {
     const { pId, size, quantity } = req.body;
@@ -221,15 +221,13 @@ module.exports.addToCart = async (req, res) => {
         return res.status(202).json({
           success: true,
           message: "Insufficient Stock",
-          cart: user.cart,
         });
       } else {
-        user.cart[existingCartItemIndex].quantity += parseFloat(quantity);
+        user.cart[existingCartItemIndex].quantity = parseFloat(quantity);
         await user.save();
         return res.status(201).json({
           success: true,
           message: "Updated Quantity",
-          cart: user.cart,
         });
       }
     } else {
@@ -238,7 +236,6 @@ module.exports.addToCart = async (req, res) => {
       return res.status(200).json({
         success: true,
         message: "Product added to the cart",
-        cart: user.cart,
       });
     }
   } catch (error) {
@@ -263,6 +260,7 @@ module.exports.fetchCartItems = async (req, res) => {
       product: {
         _id: cartItem.product._id,
         name: cartItem.product.name,
+        images: cartItem.product.images,
         price: cartItem.product.price,
         sizes: cartItem.product.sizes, // Include sizes in the response
         // Add other product details as needed
@@ -281,6 +279,47 @@ module.exports.fetchCartItems = async (req, res) => {
       success: false,
       message: "Internal Server Error",
     });
+  }
+};
+
+module.exports.updateCart = async (req, res) => {
+  try {
+    const { pId, size, quantity } = req.body;
+    const product = await Product.findById(pId);
+    const intSize = parseFloat(size);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
+    }
+    const selectedSize = product.sizes.find((s) => s.size === intSize);
+    if (selectedSize.quantity < quantity) {
+      return res.status(400).json({
+        success: false,
+        message: "Insufficient stock",
+      });
+    }
+
+    const user = req.user;
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    // Check if the product is already in the cart
+    const existingCartItemIndex = user.cart.findIndex((cartItem) =>
+      cartItem.product.equals(pId)
+    );
+    user.cart[existingCartItemIndex].quantity = parseFloat(quantity);
+    await user.save();
+    return res.status(201).json({
+      success: true,
+      message: "Updated Quantity",
+    });
+  } catch (error) {
+    console.log(`Error in adding cart items: ${error}`);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 
