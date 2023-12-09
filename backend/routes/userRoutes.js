@@ -11,6 +11,12 @@ router.get("/verify-user/:token", userController.verifyUser);
 router.post("/forgotten-password", userController.forgottenPassword);
 router.post("/update-password/:token", userController.updatePassword);
 
+router.post(
+  "/update",
+  passport.authenticate("jwt", { session: false }),
+  userController.updateUser
+);
+
 // admin route
 router.get(
   "/admin",

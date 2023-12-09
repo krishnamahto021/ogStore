@@ -15,7 +15,7 @@ import {
 import { searchProduct } from "../../Api/agolia";
 
 const Header = () => {
-  const { loggedInUser } = useSelector(userSelector);
+  const { loggedInUser, cartItems } = useSelector(userSelector);
   const { categories } = useSelector(adminSelector);
   const [showHam, setShowHam] = useState(true);
   const [query, setQuery] = useState("");
@@ -68,8 +68,9 @@ const Header = () => {
                 className="duration-200"
               />
               {loggedInUser.jwtToken ? (
-                <Link to="/user/cart">
+                <Link to="/user/cart" className="relative">
                   <BsCart />
+                  <div className="absolute -top-[40%] left-0 right-0 text-lg text-textOne font-light m-1 p-2">{cartItems?.length}</div>
                 </Link>
               ) : (
                 <></>

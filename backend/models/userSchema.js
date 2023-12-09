@@ -12,7 +12,7 @@ const userModel = mongoose.Schema(
       required: true,
     },
     address: {
-      type: String,
+      type: {},
       requied: true,
     },
     cart: [

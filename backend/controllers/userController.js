@@ -105,6 +105,38 @@ module.exports.signIn = async (req, res) => {
   }
 };
 
+module.exports.updateUser = async (req, res) => {
+  try {
+    const { email, password, phone, address } = req.body;
+    const user = await User.findOne({ email });
+    const hashedPassword = await passwordHelper.hashingPasswordFunction(
+      password
+    );
+    if (user) {
+      user.password = hashedPassword || user.password;
+      user.phone = phone || user.phone;
+      user.address = address || user.address;
+      await user.save();
+      return res.status(200).send({
+        success: true,
+        message: "Updated Details successfully",
+        user,
+      });
+    } else {
+      return res.status(400).send({
+        success: false,
+        message: "User Not registered",
+      });
+    }
+  } catch (error) {
+    console.log(`Error in updating user`);
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
 module.exports.verifyUser = async (req, res) => {
   try {
     const { token } = req.params;
@@ -312,6 +344,7 @@ module.exports.updateCart = async (req, res) => {
       cartItem.product.equals(pId)
     );
     user.cart[existingCartItemIndex].quantity = parseFloat(quantity);
+    user.cart[existingCartItemIndex].size = parseFloat(size);
     await user.save();
     return res.status(201).json({
       success: true,

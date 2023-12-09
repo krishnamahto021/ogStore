@@ -87,7 +87,7 @@ const SignUp = () => {
           <div className="flex flex-col gap-2 justify-between">
             <label htmlFor="address">Address</label>
             <input
-              type="number"
+              type="text"
               placeholder="Enter your pincode"
               className="p-1 rounded-sm bg-bgThree focus:outline-none"
               value={address}
