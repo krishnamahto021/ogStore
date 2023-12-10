@@ -10,6 +10,7 @@ import axios from "axios";
 import { BsCartXFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setBuyNow,
   setCart,
   setRedirectPath,
   updateCart,
@@ -20,7 +21,7 @@ import {
   updateProduct,
 } from "../../Redux/Reducers/adminReducer";
 import SliderComponent from "../../Components/Slider";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const { loggedInUser, cartItems } = useSelector(userSelector);
@@ -34,19 +35,12 @@ const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const [size, setSize] = useState(!cartItem ? "" : cartItem.size);
   const [quantity, setQuantity] = useState(!cartItem ? 1 : cartItem.quantity);
-  const [swapSize, setSwapSize] = useState(false);
 
   useEffect(() => {
     // Update size and quantity when cartItem changes
-    if (swapSize) {
-      console.log(swapSize);
-      setSize(""); // Reset the size to an empty string if swapSize is true
-      setQuantity(1);
-    } else {
-      setSize(!cartItem ? "" : cartItem.size);
-    }
+    setSize(!cartItem ? "" : cartItem.size);
     setQuantity(!cartItem ? 1 : cartItem.quantity);
-  }, [cartItem, swapSize]);
+  }, [cartItem]);
 
   const config = {
     headers: {
@@ -151,8 +145,17 @@ const ProductCard = ({ product }) => {
       toast.error(`Something Went Wrong`);
     }
   };
+
+  const handleBuyNow = () => {
+    if (!size || quantity < 1) {
+      toast.error(`Select size and quantity before buying`);
+      return;
+    }
+    dispatch(setBuyNow({ price, quantity, product, size }));
+    navigate("/user/order-page");
+  };
   return (
-    <div className="productCard p-1 m-1 bg-bgThree max-w-xs h-96 flex flex-col gap-1 justify-around rounded overflow-hidden shadow-lg relative">
+    <div className="productCard p-1  m-1 bg-bgThree max-w-xs h-[25rem] flex flex-col gap-1 justify-around rounded overflow-hidden shadow-lg relative">
       <div
         className={`absolute top-2 right-1 flex justify-around text-2xl z-20 ${
           loggedInUser.role === 1 ? "block" : "hidden"
@@ -272,12 +275,14 @@ const ProductCard = ({ product }) => {
           </button>
         )}
 
-        <button
+        <Link
+          to="/user/order-page"
           type="submit"
+          onClick={handleBuyNow}
           className="p-2 flex items-center justify-center gap-2  w-full rounded-md bg-bgTwo text-textThree hover:bg-bgOne hover:text-textOne duration-300"
         >
           Buy Now <AiFillThunderbolt />
-        </button>
+        </Link>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 const passport = require("passport");
 const { checkAdmin } = require("../middlewares/adminMiddleware");
-
+const paymentController = require("../controllers/paymentController");
 router.post("/signUp", userController.signUp);
 router.post("/signIn", userController.signIn);
 router.get("/verify-user/:token", userController.verifyUser);
@@ -42,5 +42,11 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   userController.updateCart
 );
+
+// payment routes
+router.get("/braintree/token", paymentController.braintreeTokenController);
+
+router.post('/braintree/payment',passport.authenticate('jwt',{session:false}),paymentController.braintreePaymentController);
+
 
 module.exports = router;

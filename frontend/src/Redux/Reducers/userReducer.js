@@ -6,6 +6,7 @@ const initialState = {
   loggedInUser: {},
   redirectPath: null,
   cartItems: [],
+  buyNow: {},
 };
 export const fetchCartItems = createAsyncThunk(
   "user/fetch-cart-items",
@@ -65,6 +66,12 @@ const userSlice = createSlice({
         cartItems: updatedPrdouct,
       };
     },
+    setBuyNow: (state, action) => {
+      return {
+        ...state,
+        buyNow: action.payload,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCartItems.fulfilled, (state, action) => {
@@ -83,5 +90,6 @@ export const {
   logOutUser,
   setCart,
   updateCart,
+  setBuyNow,
 } = userSlice.actions;
 export const userSelector = (state) => state.userReducer;
