@@ -3,12 +3,21 @@ import Layout from "../../Components/Layouts/Layout";
 import { useSelector } from "react-redux";
 import { userSelector } from "../../Redux/Reducers/userReducer";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import logo from "../Assets/images/logo.png";
 
 const OrderPage = () => {
-  const { cartItems } = useSelector(userSelector);
+  const { cartItems, loggedInUser } = useSelector(userSelector);
+
   const [totalAmount, setTotalAmount] = useState(0);
   const { buyNow } = useSelector(userSelector);
   const { product, quantity, size } = buyNow;
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${loggedInUser.jwtToken}`,
+    },
+  };
 
   useEffect(() => {
     let calculatedTotalAmount = 0;
@@ -24,6 +33,40 @@ const OrderPage = () => {
 
     setTotalAmount(calculatedTotalAmount);
   }, [cartItems, buyNow]);
+
+  const checkoutHandler = async () => {
+    const {
+      data: { apiKeys },
+    } = await axios.get("/user/get-keys");
+    const { data } = await axios.post(
+      "/user/checkout",
+      { totalAmount },
+      config
+    );
+    const options = {
+      key: apiKeys.RAZORPAY_API_KEY,
+      amount: data.order.amount,
+      currency: "INR",
+      name: "ogStore",
+      description: `${product.name} of size ${size} , ${quantity} is successfull`,
+      image: logo,
+      order_id: data.order.id,
+      callback_url: "/user/payment-verification",
+      prefill: {
+        name: loggedInUser.name,
+        email: loggedInUser.email,
+        contact: loggedInUser.phone,
+      },
+      notes: {
+        address: "Bangalore",
+      },
+      theme: {
+        color: "#A2D2FF",
+      },
+    };
+    const razor = new window.Razorpay(options);
+    razor.open();
+  };
 
   return (
     <Layout>
@@ -59,6 +102,7 @@ const OrderPage = () => {
             <div className="flex justify-around">
               <button
                 type="submit"
+                onClick={checkoutHandler}
                 className="p-2 rounded-md bg-bgTwo text-textThree hover:bg-bgThree hover:text-textOne duration-300"
               >
                 Make Payment
@@ -100,12 +144,14 @@ const OrderPage = () => {
                 </div>
               </div>
             ))}
+
             <div className="flex justify-around">
               <button
                 type="submit"
-                className="p-2 rounded-md bg-bgTwo text-textThree hover:bg-bgThree hover:text-textOne duration-300"
+                onClick={checkoutHandler}
+                className="p-2 capitalize rounded-md bg-bgTwo text-textThree hover:bg-bgThree hover:text-textOne duration-300"
               >
-                Make Payment
+                Pay <span className="font-semibold ml-3 ">{totalAmount}</span>
               </button>
             </div>
           </>

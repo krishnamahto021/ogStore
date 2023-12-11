@@ -33,6 +33,7 @@ import CreateProduct from "./Pages/Admin/CreateProduct";
 import Orders from "./Pages/User/Orders";
 import CartPage from "./Pages/User/CartPage";
 import OrderPage from "./Pages/User/OrderPage";
+import PaymentVerification from "./Pages/User/PaymentVerfication";
 
 export const ProtectedRouteHome = ({ element }) => {
   const { loggedInUser } = useSelector(userSelector);
@@ -121,6 +122,10 @@ export const router = createBrowserRouter([
   {
     path: "/user/order-page",
     element: <ProtectedRouteHome element={<OrderPage />} />,
+  },
+  {
+    path: "/user/payment-verification",
+    element:<PaymentVerification/>
   },
 
   // admin routes

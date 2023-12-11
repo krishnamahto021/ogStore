@@ -7,6 +7,7 @@ const Product = require("../models/productSchema");
 const passwordHelper = require("../utils/passwordHelper");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv").config();
 
 module.exports.signUp = async (req, res) => {
   try {
@@ -360,5 +361,19 @@ module.exports.updateCart = async (req, res) => {
 module.exports.checkAuth = async (req, res) => {
   return res.status(200).send({
     message: "Hello Admin",
+  });
+};
+
+// give api key for frontend
+module.exports.sendApiKeys = async (req, res) => {
+  const apiKeys = {
+    REACT_APP_ALGOLIA_API_ID: process.env.REACT_APP_ALGOLIA_API_ID,
+    REACT_APP_ALGOLIA_API_KEY: process.env.REACT_APP_ALGOLIA_API_KEY,
+    REACT_APP_ALGOLIA_INDEX_NAME: process.env.REACT_APP_ALGOLIA_INDEX_NAME,
+    RAZORPAY_API_KEY: process.env.RAZORPAY_API_KEY,
+  };
+  return res.status(200).json({
+    message: "Api key",
+    apiKeys,
   });
 };

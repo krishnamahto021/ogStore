@@ -1,30 +1,48 @@
-const braintree = require("braintree");
-const dotenv = require("dotenv").config;
-var gateway = new braintree.BraintreeGateway({
-  environment: braintree.Environment.Sandbox,
-  merchantId: process.env.BRAINTREE_MERCHANT_ID,
-  publicKey: process.env.BRAINTREE_PUBLIC_KEY,
-  privateKey: process.env.BRAINTREE_PRIVATE_KEY,
-});
-
-module.exports.braintreeTokenController = async (req, res) => {
+const instance = require("../config/razorpay");
+const crypto = require("crypto");
+module.exports.checkout = async (req, res) => {
   try {
-    gateway.clientToken.generate({}, function (err, response) {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.send(response);
-      }
+    const { totalAmount } = req.body;
+    const options = {
+      amount: Number(totalAmount * 100),
+      currency: "INR",
+    };
+    const order = await instance.instance.orders.create(options);
+    res.status(200).send({
+      success: true,
+      order,
     });
   } catch (error) {
-    console.log(`Error in genreating token from braintree ${error}`);
+    console.log(`Error in checking out the user from razorpay  ${error}`);
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
   }
 };
 
-module.exports.braintreePaymentController = async (req, res) => {
+module.exports.paymentVerification = async (req, res) => {
   try {
-    const { order, nonce } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+      req.body;
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_API_SECRET)
+      .update(body.toString())
+      .digest("hex");
+
+    if (expectedSignature === razorpay_signature) {
+      res.redirect(`http://localhost:3000/user/payment-verification`);
+    } else {
+      res.status(400).json({
+        message: "Invalid Razorpay signature",
+        success: false,
+      });
+    }
   } catch (error) {
-    console.log(`error in payment ${error} `);
+    console.log(`Error in payment verification: ${error}`);
+    res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
   }
 };

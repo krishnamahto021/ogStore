@@ -43,10 +43,16 @@ router.post(
   userController.updateCart
 );
 
+//get api keys
+router.get("/get-keys", userController.sendApiKeys);
+
 // payment routes
-router.get("/braintree/token", paymentController.braintreeTokenController);
+router.post(
+  "/checkout",
+  passport.authenticate("jwt", { session: false }),
+  paymentController.checkout
+);
 
-router.post('/braintree/payment',passport.authenticate('jwt',{session:false}),paymentController.braintreePaymentController);
-
+router.post("/payment-verification", paymentController.paymentVerification);
 
 module.exports = router;
