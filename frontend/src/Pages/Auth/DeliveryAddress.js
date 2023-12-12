@@ -20,7 +20,8 @@ const DeliveryAddress = () => {
       Authorization: `Bearer ${loggedInUser.jwtToken}`,
     },
   };
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const { data } = await axios.post(
         "/user/update",

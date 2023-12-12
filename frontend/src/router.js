@@ -125,7 +125,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/user/payment-verification",
-    element:<PaymentVerification/>
+    element: <PaymentVerification />,
   },
 
   // admin routes
