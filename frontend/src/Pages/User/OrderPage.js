@@ -38,9 +38,10 @@ const OrderPage = () => {
     const {
       data: { apiKeys },
     } = await axios.get("/user/get-keys");
+    const products = Object.keys(buyNow).length === 0 ? cartItems : buyNow;
     const { data } = await axios.post(
       "/user/checkout",
-      { totalAmount },
+      { totalAmount, products },
       config
     );
     const options = {
@@ -48,7 +49,7 @@ const OrderPage = () => {
       amount: data.order.amount,
       currency: "INR",
       name: "ogStore",
-      description: `${product.name} of size ${size} , ${quantity} is successfull`,
+      description: "Payement processing",
       image: logo,
       order_id: data.order.id,
       callback_url: "/user/payment-verification",

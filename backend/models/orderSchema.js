@@ -2,8 +2,18 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
-    products: [{ type: mongoose.ObjectId, ref: "Product" }],
-    payment: {},
+    products: [
+      {
+        product: { type: mongoose.ObjectId, ref: "Product" },
+        quantity: { type: Number },
+        size: { type: Number },
+      },
+    ],
+    payment: {
+      razorpay_order_id: { type: String },
+      razorpay_payment_id: { type: String },
+      status: { type: String },
+    },
     buyer: {
       type: mongoose.ObjectId,
       ref: "User",
@@ -11,7 +21,7 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: String,
       default: "New",
-      enum: ["Processing", "Shipped", "Delivered", "Cancel"],
+      enum: ["New", "Processing", "Shipped", "Delivered", "Cancel"],
     },
   },
   { timestamps: true }
