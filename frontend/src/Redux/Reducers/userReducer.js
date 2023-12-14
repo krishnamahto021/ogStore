@@ -7,6 +7,7 @@ const initialState = {
   redirectPath: null,
   cartItems: [],
   buyNow: {},
+  orders: [],
 };
 export const fetchCartItems = createAsyncThunk(
   "user/fetch-cart-items",
@@ -15,6 +16,23 @@ export const fetchCartItems = createAsyncThunk(
       const { data } = await axios.get("/user/fetch-cart-items", config);
       if (data.success) {
         return data.cartItems;
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error(`Something went wrong`);
+      } else {
+        toast.error(`Internal server error`);
+      }
+    }
+  }
+);
+export const fetchOrders = createAsyncThunk(
+  "user/fetch-orders",
+  async (config, thunkAPI) => {
+    try {
+      const { data } = await axios.get("/user/fetch-orders", config);
+      if (data.success) {
+        return data.orders;
       }
     } catch (error) {
       if (error.response) {
@@ -72,14 +90,27 @@ const userSlice = createSlice({
         buyNow: action.payload,
       };
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(fetchCartItems.fulfilled, (state, action) => {
+    setOrders: (state, action) => {
       return {
         ...state,
-        cartItems: [...action.payload],
+        orders: [action.payload, ...state.orders],
       };
-    });
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCartItems.fulfilled, (state, action) => {
+        return {
+          ...state,
+          cartItems: [...action.payload],
+        };
+      })
+      .addCase(fetchOrders.fulfilled, (state, action) => {
+        return {
+          ...state,
+          orders: [...action.payload],
+        };
+      });
   },
 });
 

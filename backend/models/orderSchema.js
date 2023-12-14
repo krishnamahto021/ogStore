@@ -10,6 +10,7 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     payment: {
+      amount: { type: Number },
       razorpay_order_id: { type: String },
       razorpay_payment_id: { type: String },
       status: { type: String },

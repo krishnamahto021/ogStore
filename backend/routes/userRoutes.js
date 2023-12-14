@@ -43,6 +43,13 @@ router.post(
   userController.updateCart
 );
 
+//fetch orders for user
+router.get(
+  "/fetch-orders",
+  passport.authenticate("jwt", { session: false }),
+  userController.getOrdersForUser
+);
+
 //get api keys
 router.get("/get-keys", userController.sendApiKeys);
 

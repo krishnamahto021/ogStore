@@ -16,24 +16,6 @@ const userSchema = mongoose.Schema(
         size: { type: Number },
       },
     ],
-    orders: [
-      {
-        status: { type: String, default: "Pending" },
-        products: [
-          {
-            product: { type: mongoose.ObjectId, ref: "Product" },
-            quantity: { type: Number },
-            size: { type: Number },
-          },
-        ],
-        payment: {
-          razorpay_order_id: { type: String },
-          razorpay_payment_id: { type: String },
-          status: { type: String, default: "Pending" },
-        },
-        timestamp: { type: Date, default: Date.now },
-      },
-    ],
     role: { type: Number, default: 0 },
   },
   { timestamps: true }

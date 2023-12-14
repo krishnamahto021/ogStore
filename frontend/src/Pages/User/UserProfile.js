@@ -6,7 +6,7 @@ import DeliveryAddress from "../Auth/DeliveryAddress";
 const UserProfile = () => {
   return (
     <Layout>
-      <div className="flex gap-5 items-center flex-col md:flex-row justify-between">
+      <div className="flex  gap-5 items-center flex-col  justify-between">
         <UserSideBar />
         <div className="w-full h-2/3 mt-3">
           <DeliveryAddress />

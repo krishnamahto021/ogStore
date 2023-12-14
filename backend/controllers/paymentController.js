@@ -10,29 +10,28 @@ module.exports.checkout = async (req, res) => {
       currency: "INR",
     };
     const order = await instance.instance.orders.create(options);
-
     // Create a new order in the database using Order.create
-    const newOrder = await Order.create({
-      products: Array.isArray(products)
-        ? products.map((product) => ({
-            product: product.productId,
-            quantity: product.quantity,
-            size: product.size,
-          }))
-        : [
-            {
-              product: products.productId,
+    await Order.create({
+      products:
+        products.length > 0
+          ? products.map((product) => ({
+              product: product.product._id,
+              quantity: product.quantity,
+              size: product.size,
+            }))
+          : {
+              product: products.product._id,
               quantity: products.quantity,
               size: products.size,
             },
-          ],
+
       payment: {
+        amount: totalAmount,
         razorpay_order_id: order.id,
         status: "Pending",
       },
       buyer: req.user._id,
     });
-
     res.status(200).send({
       success: true,
       order,

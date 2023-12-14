@@ -7,6 +7,7 @@ const Product = require("../models/productSchema");
 const passwordHelper = require("../utils/passwordHelper");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const Order = require("../models/orderSchema");
 const dotenv = require("dotenv").config();
 
 module.exports.signUp = async (req, res) => {
@@ -281,14 +282,12 @@ module.exports.fetchCartItems = async (req, res) => {
   try {
     const userId = req.user._id; // Assuming req.user contains the authenticated user
     const user = await User.findById(userId).populate("cart.product");
-
     if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
-
     const cartItems = user.cart.map((cartItem) => ({
       product: {
         _id: cartItem.product._id,
@@ -354,6 +353,45 @@ module.exports.updateCart = async (req, res) => {
   } catch (error) {
     console.log(`Error in adding cart items: ${error}`);
     res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports.getOrdersForUser = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const orders = await Order.find({ buyer: userId })
+      .populate("products.product")
+      .sort({ createdAt: -1 });
+    const populatedOrders = orders.map((order) => ({
+      _id: order._id,
+      payment: order.payment.amount,
+      buyer: order.buyer,
+      status: order.status,
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+      products: order.products.map((product) => ({
+        quantity: product.quantity,
+        size: product.size,
+        amount: product.product.price * product.quantity, // Calculate amount based on price and quantity
+        product: {
+          _id: product.product._id,
+          name: product.product.name,
+          price: product.product.price,
+          image: product.product.images[0],
+        },
+      })),
+    }));
+
+    res.status(200).json({
+      success: true,
+      orders: populatedOrders,
+    });
+  } catch (error) {
+    console.log(`Error fetching user orders: ${error}`);
+    res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
   }
 };
 
