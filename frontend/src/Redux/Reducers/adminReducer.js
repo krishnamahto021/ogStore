@@ -13,6 +13,7 @@ const initialState = {
   searchResults: [],
   productsByCategory: [],
   showSearchScreen: false,
+  orders: [],
 };
 
 export const getInitialCategories = createAsyncThunk(
@@ -56,6 +57,18 @@ export const getInitialProducts = createAsyncThunk(
       return data.products;
     } catch (error) {
       toast.error(`Something Went Wrong`);
+    }
+  }
+);
+
+export const getOrders = createAsyncThunk(
+  "admin/fetch-orders",
+  async (config, thunkAPI) => {
+    try {
+      const { data } = await axios.get("/admin/fetch-orders", config);
+      return data.orders;
+    } catch (error) {
+      toast.error(`Something went wrong`);
     }
   }
 );
@@ -162,6 +175,12 @@ const adminSlice = createSlice({
         return {
           ...state,
           productsByCategory: [...action.payload],
+        };
+      })
+      .addCase(getOrders.fulfilled, (state, action) => {
+        return {
+          ...state,
+          orders: [...action.payload],
         };
       });
   },

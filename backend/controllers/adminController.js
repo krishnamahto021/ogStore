@@ -1,6 +1,7 @@
 const Category = require("../models/categorySchema");
 const slugify = require("slug");
 const Product = require("../models/productSchema");
+const Order = require("../models/orderSchema");
 
 // category api
 module.exports.createCategory = async (req, res) => {
@@ -247,6 +248,68 @@ module.exports.deleteProduct = async (req, res) => {
     return res.status(500).send({
       message: "Error in deleting Product",
       success: false,
+    });
+  }
+};
+
+// order
+module.exports.getOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({})
+      .populate("products.product")
+      .sort({ createdAt: -1 });
+    const populatedOrders = orders.map((order) => ({
+      _id: order._id,
+      payment: order.payment.amount,
+      buyer: order.buyer,
+      status: order.status,
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+      products: order.products.map((product) => ({
+        quantity: product.quantity,
+        size: product.size,
+        amount: product.product.price * product.quantity,
+        product: {
+          _id: product.product._id,
+          name: product.product.name,
+          price: product.product.price,
+          image: product.product.images[0],
+        },
+      })),
+    }));
+    res.status(200).json({
+      success: true,
+      orders: populatedOrders,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: "Internal Server Error",
+    });
+  }
+};
+
+module.exports.updateOrderStatus = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    const { newStatus } = req.body;
+    if (!order) {
+      res.status(400).send({
+        success: false,
+        message: "No such orders",
+      });
+    } else {
+      order.status = newStatus;
+      await order.save();
+      res.status(200).send({
+        success: true,
+        message: "order status updated successfully",
+        order,
+      });
+    }
+  } catch (error) {
+    console.log(`Errror in updating status ${error}`);
+    res.status(500).send({
+      message: "Internal Server Error",
     });
   }
 };

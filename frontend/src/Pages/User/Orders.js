@@ -63,7 +63,9 @@ const Orders = () => {
                 <p className="text-lg font-semibold">
                   Total Amount: ${order.payment.toFixed(2)}
                 </p>
-                <p className="text-lg font-semibold">Status: {order.status}</p>
+                <p className="text-lg text-gray-400 font-semibold">
+                  <span className="text-textOne mr-2">Status:</span>{order.status}
+                </p>
               </div>
             </div>
           ))}

@@ -18,7 +18,7 @@ const ForgottenPassword = () => {
         email,
       });
       if (response.status === 200) {
-        toast.success("Verification Link Sent");
+        toast.success("Password reset Link Sent");
       } else {
         toast.error(response.data.message || "An error occurred");
       }

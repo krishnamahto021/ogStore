@@ -70,12 +70,22 @@ const Header = () => {
               {loggedInUser.jwtToken ? (
                 <Link to="/user/cart" className="relative">
                   <BsCart />
-                  <div className="absolute -top-[40%] left-0 right-0 text-lg text-textOne font-light m-1 p-2">{cartItems?.length}</div>
+                  <div className="absolute -top-[40%] left-0 right-0 text-lg text-textOne font-light m-1 p-2">
+                    {cartItems?.length}
+                  </div>
                 </Link>
               ) : (
                 <></>
               )}
-              <Link to={loggedInUser.jwtToken ? "/user/profile" : "/sign-in"}>
+              <Link
+                to={
+                  loggedInUser.jwtToken
+                    ? loggedInUser.role === 1
+                      ? "/admin"
+                      : "/user/profile"
+                    : "/sign-in"
+                }
+              >
                 <CiUser className="mr-4" />
               </Link>
             </div>

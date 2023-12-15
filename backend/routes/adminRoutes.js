@@ -60,4 +60,18 @@ router.delete(
   adminController.deleteProduct
 );
 
+router.get(
+  "/fetch-orders",
+  passport.authenticate("jwt", { session: false }),
+  checkAdmin,
+  adminController.getOrders
+);
+
+router.post(
+  "/update-order-status/:id",
+  passport.authenticate("jwt", { session: false }),
+  checkAdmin,
+  adminController.updateOrderStatus
+);
+
 module.exports = router;

@@ -8,9 +8,9 @@ const AdminDashboard = () => {
   const { loggedInUser } = useSelector(userSelector);
   return (
     <Layout>
-      <div className="flex  ">
+      <div className="flex flex-col  ">
         {loggedInUser.role === 1 ? <AdminSideBar /> : <></>}
-        <div>Hi {loggedInUser.name} </div>
+        <div>Hi Admin {loggedInUser.name} </div>
       </div>
     </Layout>
   );
