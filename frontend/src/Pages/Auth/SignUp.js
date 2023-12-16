@@ -55,7 +55,7 @@ const SignUp = () => {
     >
       <div className="formOuterContainer flex justify-center items-center bg-authImage bg-cover bg-center h-fit p-2  -mt-6 ">
         <form
-          className="formContainer bg-authImage rounded-md bg-cover bg-center  flex flex-col gap-2 justify-between h-fit w-3/4 md:w-1/2 lg:w-1/3  p-2 shadow-sm shadow-[#495057] "
+          className="formContainer   rounded-md bg-cover  bg-center backdrop-blur-sm flex flex-col gap-2 justify-between h-fit w-3/4 md:w-1/2 lg:w-1/3  p-2 shadow-sm shadow-[#495057] "
           onSubmit={handleSubmit}
         >
           <h1 className="text-center p-1 text-lg font-semibold text-textOne">

@@ -210,7 +210,7 @@ const ProductCard = ({ product }) => {
       </div>
 
       <div className="flex justify-around p-1">
-        <div className=" flex flex-wrap max-w-[10rem] justify-center">
+        <div className=" flex flex-wrap max-w-[10rem] max-h-fit justify-center">
           {size || cartItem ? (
             <>
               {sizes.map((size) => (

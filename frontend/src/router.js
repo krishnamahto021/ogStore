@@ -34,6 +34,9 @@ import Orders from "./Pages/User/Orders";
 import CartPage from "./Pages/User/CartPage";
 import OrderPage from "./Pages/User/OrderPage";
 import PaymentVerification from "./Pages/User/PaymentVerfication";
+import DeliveryAddress from "./Pages/Auth/DeliveryAddress";
+import WishList from "./Pages/User/WishList";
+import Rewards from "./Pages/User/Rewards";
 
 export const ProtectedRouteHome = ({ element }) => {
   const { loggedInUser } = useSelector(userSelector);
@@ -122,6 +125,18 @@ export const router = createBrowserRouter([
   {
     path: "/user/order-page",
     element: <ProtectedRouteHome element={<OrderPage />} />,
+  },
+  {
+    path: "/user/update-details",
+    element: <ProtectedRouteHome element={<DeliveryAddress />} />,
+  },
+  {
+    path: "/user/wishlist",
+    element: <ProtectedRouteHome element={<WishList />} />,
+  },
+  {
+    path: "/user/rewards",
+    element: <ProtectedRouteHome element={<Rewards />} />,
   },
   {
     path: "/user/payment-verification",

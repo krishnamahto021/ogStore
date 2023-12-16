@@ -14,6 +14,8 @@ const SliderComponent = ({ data }) => {
     slidesToScroll: 1,
     dots: true,
     swipeToSlide: true,
+    autoplay: true,
+    autoplaySpeed: 2000,
   };
   return (
     <>

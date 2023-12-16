@@ -11,6 +11,8 @@ const HomeSlider = ({ data }) => {
     slidesToShow: data.length > 5 ? 5 : data.length,
     slidesToScroll: 1,
     swipeToSlide: true,
+    autoplay: true,
+    autoplaySpeed: 5000,
     responsive: [
       {
         breakpoint: 1024,
