@@ -7,6 +7,7 @@ import { FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Layout from "../../Components/Layouts/Layout";
+import UserSideBar from "../User/UserSideBar";
 
 const DeliveryAddress = () => {
   const { loggedInUser } = useSelector(userSelector);
@@ -48,7 +49,8 @@ const DeliveryAddress = () => {
 
   return (
     <Layout>
-      <div className="formOuterContainer  flex justify-center items-center bg-authImage bg-cover bg-center h-[85vh]  -mt-6 ">
+      <UserSideBar />
+      <div className="formOuterContainer  flex justify-center items-center bg-authImage bg-cover bg-center h-[85vh]   ">
         <form
           className="formContainer backdrop-blur-sm  rounded-md bg-cover bg-center  flex flex-col gap-2 justify-between h-fit w-3/4 md:w-1/2 lg:w-1/3  p-2 shadow-sm shadow-[#495057] "
           onSubmit={handleSubmit}

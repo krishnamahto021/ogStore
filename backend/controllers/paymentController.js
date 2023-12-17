@@ -1,7 +1,8 @@
 const instance = require("../config/razorpay");
 const crypto = require("crypto");
 const Order = require("../models/orderSchema");
-
+const Product = require("../models/productSchema");
+const User = require("../models/userSchema");
 module.exports.checkout = async (req, res) => {
   try {
     const { totalAmount, products } = req.body;
@@ -64,10 +65,40 @@ module.exports.paymentVerification = async (req, res) => {
         success: false,
       });
     }
+    const user = await User.findById(order.buyer);
 
     if (expectedSignature === razorpay_signature) {
       order.payment.razorpay_payment_id = razorpay_payment_id;
       order.payment.status = "Success";
+
+      // Update product quantities based on the order
+      for (const productItem of order.products) {
+        const product = await Product.findById(productItem.product);
+        const sizeIndex = product.sizes.findIndex(
+          (size) => size.size === productItem.size
+        );
+
+        if (
+          sizeIndex !== -1 &&
+          product.sizes[sizeIndex].quantity >= productItem.quantity
+        ) {
+          // Reduce the quantity in the product schema
+          product.sizes[sizeIndex].quantity -= productItem.quantity;
+          await product.save();
+        }
+      }
+      // Clear the items from the user's cart based on the order
+      const updatedCart = user.cart.filter((cartItem) => {
+        const foundProduct = order.products.find(
+          (productItem) =>
+            productItem.product.toString() === cartItem.product.toString() &&
+            productItem.size === cartItem.size
+        );
+        return !foundProduct;
+      });
+      user.cart = updatedCart;
+      await user.save();
+
       await order.save();
       res.redirect(`http://localhost:3000/user/payment-verification`);
     } else {

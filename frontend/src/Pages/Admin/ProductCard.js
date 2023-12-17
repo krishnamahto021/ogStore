@@ -257,15 +257,17 @@ const ProductCard = ({ product }) => {
           {size || cartItem ? (
             <>
               {sizes.map((size) => (
-                <div
+                <button
                   key={size.size}
                   className={`inline-block ${
-                    size.quantity !== 0 ? "" : "line-through text-red-500"
-                  } bg-bgOne  cursor-pointer rounded-full px-1 py-1 text-sm font-semibold text-textFour mr-2 mb-2`}
+                    size.quantity !== 0
+                      ? "text-textFour"
+                      : "disabled  text-red-500 cursor-not-allowed"
+                  } bg-bgOne  cursor-pointer rounded-full px-1 py-1 text-sm font-semibold  mr-2 mb-2`}
                   onClick={() => setSize(size.size)}
                 >
                   {`${size.size}`}
-                </div>
+                </button>
               ))}
               <div className="w-full flex  gap-4  items-center justify-center">
                 <p>{size ? size : cartItem.size}</p>
@@ -284,15 +286,17 @@ const ProductCard = ({ product }) => {
             <>
               {!cartItem
                 ? sizes.map((size) => (
-                    <div
+                    <button
                       key={size.size}
                       className={`inline-block ${
-                        size.quantity !== 0 ? "" : "line-through text-red-500"
-                      } bg-bgOne  cursor-pointer rounded-full px-1 py-1 text-sm font-semibold text-textFour mr-2 mb-2`}
+                        size.quantity !== 0
+                          ? "text-textFour"
+                          : "disabled  text-red-500 cursor-not-allowed"
+                      } bg-bgOne  cursor-pointer rounded-full px-1 py-1 text-sm font-semibold  mr-2 mb-2`}
                       onClick={() => setSize(size.size)}
                     >
                       {`${size.size}`}
-                    </div>
+                    </button>
                   ))
                 : size}
             </>
