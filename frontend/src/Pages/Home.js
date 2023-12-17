@@ -11,12 +11,13 @@ import HomeSlider from "../Components/HomeSlider";
 import {
   authorizeUser,
   fetchCartItems,
+  fetchFavorites,
   userSelector,
 } from "../Redux/Reducers/userReducer";
 
 const Home = () => {
   const { products, showSearchScreen } = useSelector(adminSelector);
-  const { loggedInUser } = useSelector(userSelector);
+  const { loggedInUser, favorites } = useSelector(userSelector);
   const config = {
     headers: {
       "Content-type": "application/json",
@@ -32,6 +33,7 @@ const Home = () => {
   useEffect(() => {
     if (loggedInUser.jwtToken) {
       dispatch(fetchCartItems(config));
+      dispatch(fetchFavorites(config));
     }
   }, [loggedInUser]);
   const getFirst10Products = () => {

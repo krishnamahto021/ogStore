@@ -116,6 +116,27 @@ const userSlice = createSlice({
         orders: [action.payload, ...state.orders],
       };
     },
+    toggleFavorite: (state, action) => {
+      const productId = action.payload._id;
+      const existingFavIndex = state.favorites.findIndex(
+        (item) => item.product._id === productId
+      );
+
+      if (existingFavIndex !== -1) {
+        const filteredFav = state.favorites.filter(
+          (p) => p.product._id !== productId
+        );
+        return {
+          ...state,
+          favorites: [...filteredFav],
+        };
+      } else {
+        return {
+          ...state,
+          favorites: [{ product: action.payload }, ...state.favorites],
+        };
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -148,5 +169,6 @@ export const {
   setCart,
   updateCart,
   setBuyNow,
+  toggleFavorite,
 } = userSlice.actions;
 export const userSelector = (state) => state.userReducer;

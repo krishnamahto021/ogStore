@@ -15,6 +15,7 @@ import {
   setBuyNow,
   setCart,
   setRedirectPath,
+  toggleFavorite,
   updateCart,
   userSelector,
 } from "../../Redux/Reducers/userReducer";
@@ -26,7 +27,7 @@ import SliderComponent from "../../Components/Slider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
-  const { loggedInUser, cartItems } = useSelector(userSelector);
+  const { loggedInUser, cartItems, favorites } = useSelector(userSelector);
   const cartItem = cartItems.find((item) => item.product._id === product._id);
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,13 +38,18 @@ const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const [size, setSize] = useState(!cartItem ? "" : cartItem.size);
   const [quantity, setQuantity] = useState(!cartItem ? 1 : cartItem.quantity);
-
   const [liked, setLiked] = useState(false);
   useEffect(() => {
     // Update size and quantity when cartItem changes
     setSize(!cartItem ? "" : cartItem.size);
     setQuantity(!cartItem ? 1 : cartItem.quantity);
   }, [cartItem]);
+  useEffect(() => {
+    if (loggedInUser.jwtToken) {
+      const isLiked = favorites.some((fav) => fav.product._id === product._id);
+      setLiked(isLiked);
+    }
+  }, [favorites, product]);
 
   const config = {
     headers: {
@@ -157,6 +163,25 @@ const ProductCard = ({ product }) => {
     dispatch(setBuyNow({ price, quantity, product, size }));
     navigate("/user/order-page");
   };
+
+  const toggleFavorites = async (product) => {
+    try {
+      const { data } = await axios.get(
+        `/user/toggle-fav/${product._id}`,
+        config
+      );
+      if (data.success) {
+        dispatch(toggleFavorite(product));
+        toast.success(data.message);
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error(`Something went wrong`);
+      } else {
+        toast.error(`Internal server error`);
+      }
+    }
+  };
   return (
     <div className="productCard p-1  m-1 bg-bgThree max-w-xs h-[25rem] flex flex-col gap-1 justify-around rounded overflow-hidden shadow-lg relative">
       <div
@@ -191,9 +216,15 @@ const ProductCard = ({ product }) => {
         } top-0 p-1 text-xl right-0 z-20 `}
       >
         {liked ? (
-          <FaHeart className="text-red-600 cursor-pointer" />
+          <FaHeart
+            className="text-red-600 cursor-pointer hover:scale-90 duration-200"
+            onClick={() => toggleFavorites(product)}
+          />
         ) : (
-          <FaRegHeart className="cursor-pointer" />
+          <FaRegHeart
+            className="cursor-pointer hover:scale-125 duration-200"
+            onClick={() => toggleFavorites(product)}
+          />
         )}
       </div>
       <div className="w-full p-1 h-44 ">

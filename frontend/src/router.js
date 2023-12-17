@@ -35,7 +35,7 @@ import CartPage from "./Pages/User/CartPage";
 import OrderPage from "./Pages/User/OrderPage";
 import PaymentVerification from "./Pages/User/PaymentVerfication";
 import DeliveryAddress from "./Pages/Auth/DeliveryAddress";
-// import WishList from "./Pages/User/WishList";
+import WishList from "./Pages/User/WishList";
 import Rewards from "./Pages/User/Rewards";
 
 export const ProtectedRouteHome = ({ element }) => {
@@ -130,10 +130,10 @@ export const router = createBrowserRouter([
     path: "/user/update-details",
     element: <ProtectedRouteHome element={<DeliveryAddress />} />,
   },
-  // {
-  //   path: "/user/wishlist",
-  //   element: <ProtectedRouteHome element={<WishList />} />,
-  // },
+  {
+    path: "/user/wishlist",
+    element: <ProtectedRouteHome element={<WishList />} />,
+  },
   {
     path: "/user/rewards",
     element: <ProtectedRouteHome element={<Rewards />} />,
