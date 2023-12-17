@@ -8,6 +8,7 @@ const initialState = {
   cartItems: [],
   buyNow: {},
   orders: [],
+  favorites: [],
 };
 export const fetchCartItems = createAsyncThunk(
   "user/fetch-cart-items",
@@ -43,6 +44,25 @@ export const fetchOrders = createAsyncThunk(
     }
   }
 );
+
+export const fetchFavorites = createAsyncThunk(
+  "/user/fetch-favorites",
+  async (config, thunkAPI) => {
+    try {
+      const { data } = await axios.get("/user/fetch-favorites", config);
+      if (data.success) {
+        return data.favorites;
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error(`Something went wrong`);
+      } else {
+        toast.error(`Internal Server error`);
+      }
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -109,6 +129,12 @@ const userSlice = createSlice({
         return {
           ...state,
           orders: [...action.payload],
+        };
+      })
+      .addCase(fetchFavorites.fulfilled, (state, action) => {
+        return {
+          ...state,
+          favorites: [...action.payload],
         };
       });
   },

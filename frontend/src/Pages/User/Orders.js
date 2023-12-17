@@ -6,7 +6,6 @@ import { fetchOrders, userSelector } from "../../Redux/Reducers/userReducer";
 
 const Orders = () => {
   const { loggedInUser, orders } = useSelector(userSelector);
-  console.log(orders);
   const dispatch = useDispatch();
   const config = {
     headers: {

@@ -43,6 +43,18 @@ router.post(
   userController.updateCart
 );
 
+router.get(
+  "/toggle-fav/:productId",
+  passport.authenticate("jwt", { session: false }),
+  userController.toggleFavorite
+);
+
+router.get(
+  "/fetch-favorites",
+  passport.authenticate("jwt", { session: false }),
+  userController.fetchFavorite
+);
+
 //fetch orders for user
 router.get(
   "/fetch-orders",

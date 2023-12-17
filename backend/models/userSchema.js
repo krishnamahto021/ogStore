@@ -16,6 +16,11 @@ const userSchema = mongoose.Schema(
         size: { type: Number },
       },
     ],
+    favorites: [
+      {
+        product: { type: mongoose.ObjectId, ref: "Product" },
+      },
+    ],
     role: { type: Number, default: 0 },
   },
   { timestamps: true }

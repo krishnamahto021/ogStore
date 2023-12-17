@@ -415,3 +415,59 @@ module.exports.sendApiKeys = async (req, res) => {
     apiKeys,
   });
 };
+
+// toggle fav
+module.exports.toggleFavorite = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const user = req.user;
+    const existingFav = user.favorites.find(
+      (fav) => fav.product.toString() === productId
+    );
+
+    if (existingFav) {
+      user.favorites = user.favorites.filter(
+        (fav) => fav.product.toString() !== productId
+      );
+      await user.save();
+      res.status(200).send({
+        success: true,
+        message: "Product removed from favorites",
+      });
+    } else {
+      user.favorites.push({ product: productId });
+      await user.save();
+      res.status(200).send({
+        success: true,
+        message: "Product added to favorites",
+      });
+    }
+  } catch (error) {
+    console.log(`error in toggling fav ${error}`);
+    res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+module.exports.fetchFavorite = async (req, res) => {
+  const userId = req.user._id; // Assuming req.user contains the authenticated user
+
+  try {
+    const user = await User.findById(userId).populate("favorites.product");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).send({
+      success: true,
+      message: "Fetched favorite items",
+      favorites: user.favorites,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

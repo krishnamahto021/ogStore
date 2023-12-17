@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { BsCartXFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
+import { FaHeart } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
 import {
   setBuyNow,
   setCart,
@@ -36,6 +38,7 @@ const ProductCard = ({ product }) => {
   const [size, setSize] = useState(!cartItem ? "" : cartItem.size);
   const [quantity, setQuantity] = useState(!cartItem ? 1 : cartItem.quantity);
 
+  const [liked, setLiked] = useState(false);
   useEffect(() => {
     // Update size and quantity when cartItem changes
     setSize(!cartItem ? "" : cartItem.size);
@@ -182,6 +185,17 @@ const ProductCard = ({ product }) => {
           </>
         )}
       </div>
+      <div
+        className={`likedContainer absolute ${
+          loggedInUser.role === 0 ? "block" : "hidden"
+        } top-0 p-1 text-xl right-0 z-20 `}
+      >
+        {liked ? (
+          <FaHeart className="text-red-600 cursor-pointer" />
+        ) : (
+          <FaRegHeart className="cursor-pointer" />
+        )}
+      </div>
       <div className="w-full p-1 h-44 ">
         <SliderComponent data={product} />
       </div>
@@ -197,13 +211,11 @@ const ProductCard = ({ product }) => {
           <div className="font-bold text-sm md:text-lg ">{name}</div>
         )}
         {edit ? (
-          <>
-            <input
-              className="border-b px-1 border-black focus:outline-none"
-              value={price}
-              onChange={(e) => setNewPrice(e.target.value)}
-            ></input>
-          </>
+          <input
+            className="border-b px-1 border-black focus:outline-none"
+            value={price}
+            onChange={(e) => setNewPrice(e.target.value)}
+          ></input>
         ) : (
           <p className="text-textOne text-base">{` $${price}`}</p>
         )}
