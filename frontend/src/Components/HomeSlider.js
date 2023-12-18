@@ -38,7 +38,7 @@ const HomeSlider = ({ data }) => {
     ],
   };
   return (
-    <>
+    <div className="px-3">
       <Slider {...settings}>
         {data?.map((p) => (
           <ProductCard product={p} />
@@ -64,7 +64,7 @@ const HomeSlider = ({ data }) => {
 }
 
       `}</style>
-    </>
+    </div>
   );
 };
 
