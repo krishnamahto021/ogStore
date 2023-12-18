@@ -35,7 +35,6 @@ const CartPage = () => {
               ))}
             </div>
             <div className="addressContainer w-1/5">
-              <p>{loggedInUser.address}</p>
               <div className="flex justify-around mt-5">
                 <Link
                   to="/user/order-page"

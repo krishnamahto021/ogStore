@@ -5,6 +5,7 @@ import { userSelector } from "../../Redux/Reducers/userReducer";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import logo from "../Assets/images/logo.png";
+import { FaLocationDot } from "react-icons/fa6";
 
 const OrderPage = () => {
   const { cartItems, loggedInUser } = useSelector(userSelector);
@@ -71,7 +72,11 @@ const OrderPage = () => {
 
   return (
     <Layout>
-      <div className="max-w-screen-lg mx-auto mt-10">
+      <div className="max-w-screen-lg mx-auto mt-10 relative">
+        <div className=" absolute -top-16 right-0 flex items-center gap-2 justify-center">
+          <FaLocationDot />
+          <p>{loggedInUser.address}</p>
+        </div>
         {product ? (
           // Render single item bill
           <>

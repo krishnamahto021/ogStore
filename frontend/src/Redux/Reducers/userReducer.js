@@ -36,6 +36,7 @@ export const fetchOrders = createAsyncThunk(
         return data.orders;
       }
     } catch (error) {
+      console.log(error);
       if (error.response) {
         toast.error(`Something went wrong`);
       } else {

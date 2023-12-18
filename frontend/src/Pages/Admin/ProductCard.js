@@ -107,7 +107,7 @@ const ProductCard = ({ product }) => {
       }
     } catch (error) {
       if (error.response) {
-        toast.error(`${error.response.data.message}`);
+        toast.error(`Sign in to continue`);
         dispatch(setRedirectPath(location.pathname));
         navigate("/sign-in");
       } else {
@@ -248,7 +248,7 @@ const ProductCard = ({ product }) => {
             onChange={(e) => setNewPrice(e.target.value)}
           ></input>
         ) : (
-          <p className="text-textOne text-base">{` $${price}`}</p>
+          <p className="text-textOne text-base">{`₹ ${price}`}</p>
         )}
       </div>
 

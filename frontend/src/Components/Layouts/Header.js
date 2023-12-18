@@ -34,7 +34,7 @@ const Header = () => {
   };
   return (
     <div className="fixed top-0 z-40">
-      <div className="offerSection   flex text-2xl h-14 sm:h-7 md:text-lg w-screen items-center justify-around bg-black text-textTwo">
+      <div className="offerSection   flex text-2xl h-16 sm:h-11 md:h-8 md:text-lg w-screen items-center justify-around bg-black text-textTwo p-2">
         <p className="text-center capitalize">
           🎁 Order above ₹2999 today and Get Free Home delivery 🎉🥳
         </p>
