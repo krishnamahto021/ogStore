@@ -1,11 +1,30 @@
 import algoliasearch from "algoliasearch";
-const ALGOLIA_API_ID = process.env.REACT_APP_ALGOLIA_API_ID;
-const ALGOLIA_API_KEY = process.env.REACT_APP_ALGOLIA_API_KEY;
-const ALGOLIA_INDEX_NAME = process.env.REACT_APP_ALGOLIA_INDEX_NAME;
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const client = algoliasearch(ALGOLIA_API_ID, ALGOLIA_API_KEY);
+let ALGOLIA_API_ID;
+let ALGOLIA_API_KEY;
+let ALGOLIA_INDEX_NAME;
+let index;
 
-const index = client.initIndex(ALGOLIA_INDEX_NAME);
+const fetchApiKeys = async () => {
+  try {
+    const { data } = await axios.get("/user/get-keys");
+    ALGOLIA_API_ID = data.apiKeys.REACT_APP_ALGOLIA_API_ID;
+    ALGOLIA_API_KEY = data.apiKeys.REACT_APP_ALGOLIA_API_KEY;
+    ALGOLIA_INDEX_NAME = data.apiKeys.REACT_APP_ALGOLIA_INDEX_NAME;
+
+    // Initialize Algolia client and index
+    const client = algoliasearch(ALGOLIA_API_ID, ALGOLIA_API_KEY);
+    index = client.initIndex(ALGOLIA_INDEX_NAME);
+
+    console.log(ALGOLIA_INDEX_NAME); // Log the index name for verification
+  } catch (error) {
+    toast.error(`Something went wrong while fetching API keys`);
+  }
+};
+
+await fetchApiKeys();
 
 export async function indexProducts(products) {
   try {
@@ -20,9 +39,8 @@ export async function indexProducts(products) {
       shipping: product.shipping,
     }));
     await index.saveObjects(algoliaFormattedProducts);
-    // console.log(`products indexed successfully : ${objectIDs.join(",")}`);
   } catch (error) {
-    console.log(`Error in indexing products ${error}`);
+    console.log(`Error in indexing products: ${error}`);
   }
 }
 
@@ -35,7 +53,6 @@ export async function updateProductFromIndex(product) {
       price: product.price,
     };
     await index.partialUpdateObject(algoliaFormattedProduct);
-    // console.log(`Product updated successfully: ${product._id}`);
   } catch (error) {
     console.log(`Error in updating product ${product._id}: ${error}`);
   }
@@ -44,7 +61,6 @@ export async function updateProductFromIndex(product) {
 export async function deleteProductFromIndex(productID) {
   try {
     await index.deleteObject(productID);
-    // console.log(`Product deleted successfully: ${productID}`);
   } catch (error) {
     console.log(`Error in deleting product ${productID}: ${error}`);
   }
@@ -55,6 +71,6 @@ export async function searchProduct(query) {
     const { hits } = await index.search(query);
     return hits;
   } catch (error) {
-    console.log(`Error in searching products ${error}`);
+    console.log(`Error in searching products: ${error}`);
   }
 }
