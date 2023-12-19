@@ -17,7 +17,7 @@ const Footer = () => {
             href="#"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
+            className="hover:underline"
           >
             <FaInstagram className="hover:scale-150 duration-200 cursor-pointer" />
           </a>
@@ -25,7 +25,7 @@ const Footer = () => {
             href="#"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
+            className="hover:underline"
           >
             <FaWhatsapp className="hover:scale-150 duration-200 cursor-pointer" />
           </a>
@@ -33,7 +33,7 @@ const Footer = () => {
             href="#"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
+            className="hover:underline"
           >
             <FaSquareFacebook className="hover:scale-150 duration-200 cursor-pointer" />
           </a>

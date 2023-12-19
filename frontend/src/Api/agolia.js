@@ -17,8 +17,6 @@ const fetchApiKeys = async () => {
     // Initialize Algolia client and index
     const client = algoliasearch(ALGOLIA_API_ID, ALGOLIA_API_KEY);
     index = client.initIndex(ALGOLIA_INDEX_NAME);
-
-    console.log(ALGOLIA_INDEX_NAME); // Log the index name for verification
   } catch (error) {
     toast.error(`Something went wrong while fetching API keys`);
   }

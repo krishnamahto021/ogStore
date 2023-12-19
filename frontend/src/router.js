@@ -37,6 +37,7 @@ import PaymentVerification from "./Pages/User/PaymentVerfication";
 import DeliveryAddress from "./Pages/Auth/DeliveryAddress";
 import WishList from "./Pages/User/WishList";
 import Rewards from "./Pages/User/Rewards";
+import SingleProductPage from "./Pages/Product/SingleProductPage";
 
 export const ProtectedRouteHome = ({ element }) => {
   const { loggedInUser } = useSelector(userSelector);
@@ -141,6 +142,10 @@ export const router = createBrowserRouter([
   {
     path: "/user/payment-verification",
     element: <PaymentVerification />,
+  },
+  {
+    path: "/user/product/:productId",
+    element: <ProtectedRouteHome element={<SingleProductPage />} />,
   },
 
   // admin routes

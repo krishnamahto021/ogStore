@@ -33,7 +33,9 @@ const Home = () => {
   useEffect(() => {
     if (loggedInUser.jwtToken) {
       dispatch(fetchCartItems(config));
-      dispatch(fetchFavorites(config));
+      if (loggedInUser.role === 1) {
+        dispatch(fetchFavorites(config));
+      }
     }
   }, [loggedInUser]);
   const getFirst10Products = () => {
