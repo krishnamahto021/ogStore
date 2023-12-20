@@ -69,7 +69,6 @@ const OrderPage = () => {
     const razor = new window.Razorpay(options);
     razor.open();
   };
-
   return (
     <Layout>
       <div className="max-w-screen-lg mx-auto mt-10 relative">

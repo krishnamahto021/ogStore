@@ -107,7 +107,7 @@ const ProductCard = ({ product }) => {
       }
     } catch (error) {
       if (error.response) {
-        toast.error(`Sign in to continue`);
+        toast.error(`${error.response.data.message}`);
         dispatch(setRedirectPath(location.pathname));
         navigate("/sign-in");
       } else {
@@ -183,10 +183,7 @@ const ProductCard = ({ product }) => {
     }
   };
   return (
-    <Link
-      to={`/user/product/${product._id}`}
-      className="productCard p-1  m-1 bg-bgThree max-w-xs h-fit flex flex-col gap-1 justify-between rounded overflow-hidden shadow-lg relative"
-    >
+    <div className="productCard p-1   m-1 bg-bgThree max-w-xs h-[27rem] flex flex-col gap-1 justify-between rounded overflow-hidden shadow-lg relative">
       <div
         className={`absolute top-2 right-1 flex justify-around text-2xl z-20 ${
           loggedInUser.role === 1 ? "block" : "hidden"
@@ -230,9 +227,9 @@ const ProductCard = ({ product }) => {
           />
         )}
       </div>
-      <div className="w-full p-1 h-44 ">
+      <Link to={`/user/product/${product._id}`} className="w-full p-1 h-44 ">
         <SliderComponent data={product} />
-      </div>
+      </Link>
 
       <div className="md:px-1 flex  items-center justify-evenly">
         {edit ? (
@@ -264,9 +261,9 @@ const ProductCard = ({ product }) => {
                   key={size.size}
                   className={`inline-block ${
                     size.quantity !== 0
-                      ? "text-textFour"
+                      ? "text-textFour cursor-pointer"
                       : "disabled  text-red-500 cursor-not-allowed"
-                  } bg-bgOne  cursor-pointer rounded-full px-1 py-1 text-sm font-semibold  mr-2 mb-2`}
+                  } bg-bgOne   rounded-full px-1 py-1 text-sm font-semibold  mr-2 mb-2`}
                   onClick={() => setSize(size.size)}
                 >
                   {`${size.size}`}
@@ -293,9 +290,9 @@ const ProductCard = ({ product }) => {
                       key={size.size}
                       className={`inline-block ${
                         size.quantity !== 0
-                          ? "text-textFour"
+                          ? "text-textFour cursor-pointer"
                           : "disabled  text-red-500 cursor-not-allowed"
-                      } bg-bgOne  cursor-pointer rounded-full px-1 py-1 text-sm font-semibold  mr-2 mb-2`}
+                      } bg-bgOne   rounded-full px-1 py-1 text-sm font-semibold  mr-2 mb-2`}
                       onClick={() => setSize(size.size)}
                     >
                       {`${size.size}`}
@@ -334,7 +331,7 @@ const ProductCard = ({ product }) => {
           Buy Now <AiFillThunderbolt />
         </Link>
       </div>
-    </Link>
+    </div>
   );
 };
 

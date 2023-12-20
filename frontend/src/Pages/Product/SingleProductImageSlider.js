@@ -3,29 +3,27 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const SliderComponent = ({ data }) => {
+const SingleProductImageSlider = ({ data }) => {
   // data is the product
   const settings = {
     infinte: true,
     accessibility: true,
     speed: 500,
-    arrows: false,
+    arrows: true,
     slidesToShow: 1,
     slidesToScroll: 1,
     dots: true,
     swipeToSlide: true,
-    autoplay: true,
-    autoplaySpeed: 2000,
   };
   return (
     <>
       <Slider {...settings}>
         {data.images.map((imageSrc) => (
-          <div className="imageContainer w-full h-full ">
+          <div className="imageContainer h-1/2 w-full ">
             <img
               src={imageSrc}
               alt={data.name}
-              className="w-full max-h-44 p-1 object-cover aspect-square "
+              className="hover:scale-150 cursor-zoom-in duration-200 p-1 object-cover w-full aspect-square "
             ></img>
           </div>
         ))}
@@ -34,6 +32,7 @@ const SliderComponent = ({ data }) => {
         .slick-prev {
           left: 0;
           z-index: 1;
+          color:black;
         }
 
         .slick-next {
@@ -42,11 +41,11 @@ const SliderComponent = ({ data }) => {
         }
 .slick-prev:before {
     content: '←';
-    color:black;
+    color:gray;
 }
     .slick-next:before {
     content: '→';
-    color: black;
+       color:gray;
 }
 .slick-dots{
   bottom:7px;
@@ -56,4 +55,4 @@ const SliderComponent = ({ data }) => {
   );
 };
 
-export default SliderComponent;
+export default SingleProductImageSlider;

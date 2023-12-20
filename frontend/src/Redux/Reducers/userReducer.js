@@ -129,6 +129,7 @@ const userSlice = createSlice({
       };
     },
     setBuyNow: (state, action) => {
+
       return {
         ...state,
         buyNow: action.payload,

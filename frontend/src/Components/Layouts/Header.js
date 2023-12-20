@@ -105,7 +105,7 @@ const Header = () => {
           onChange={(e) => setQuery(e.target.value)}
         />
         <BsSearch
-          className="duration-200 text-2xl absolute right-6 top-[7rem] sm:top-20 cursor-pointer m-1 "
+          className="duration-200 text-2xl absolute right-6 top-3/4 sm:top-[65%] md:top-[60%] cursor-pointer m-4 "
           onClick={handleSearch}
         />
       </div>

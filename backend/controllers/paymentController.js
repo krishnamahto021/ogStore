@@ -98,9 +98,8 @@ module.exports.paymentVerification = async (req, res) => {
       });
       user.cart = updatedCart;
       await user.save();
-
       await order.save();
-      res.redirect(`hhttps://ogstore.onrender.com/user/payment-verification`);
+      res.redirect(`https://ogstore.onrender.com/user/payment-verification`);
     } else {
       order.payment.status = "Failed";
       const failedOrder = await order.save();
