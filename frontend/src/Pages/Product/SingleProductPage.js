@@ -173,8 +173,11 @@ const ProductPage = () => {
             </div>
             <p className="text-textOne text-base">{`₹ ${singleProduct.price}`}</p>
 
-            <div className="flex justify-around p-1">
-              <div className=" flex flex-wrap max-w-[10rem] max-h-fit justify-center">
+            <div className="flex justify-center gap-2  p-1 items-center ">
+              <p className="text-xl font-light text-textOne">
+                Select your Size
+              </p>
+              <div className=" flex text-3xl gap-2 max-w-[17rem] flex-wrap justify-center ">
                 {size || cartItem ? (
                   <>
                     {singleProduct.sizes.map((size) => (
@@ -184,7 +187,7 @@ const ProductPage = () => {
                           size.quantity !== 0
                             ? "text-textFour cursor-pointer "
                             : "disabled  text-red-500 cursor-not-allowed"
-                        } bg-bgOne  rounded-full px-1 py-1 text-sm font-semibold  mr-2 mb-2`}
+                        } bg-bgOne w-full h-full rounded-full px-1 py-1  font-semibold  mr-2 mb-2`}
                         onClick={() => setSize(size.size)}
                       >
                         {`${size.size}`}
@@ -213,7 +216,7 @@ const ProductPage = () => {
                               size.quantity !== 0
                                 ? "text-textFour cursor-pointer"
                                 : "disabled  text-red-500 cursor-not-allowed"
-                            } bg-bgOne  rounded-full px-1 py-1 text-sm font-semibold  mr-2 mb-2`}
+                            } bg-bgOne  rounded-full px-1 py-1  font-semibold  mr-2 mb-2`}
                             onClick={() => setSize(size.size)}
                           >
                             {`${size.size}`}
