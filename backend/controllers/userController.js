@@ -8,6 +8,7 @@ const passwordHelper = require("../utils/passwordHelper");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const Order = require("../models/orderSchema");
+const Review = require("../models/ratingSchema");
 const dotenv = require("dotenv").config();
 
 module.exports.signUp = async (req, res) => {
@@ -90,6 +91,7 @@ module.exports.signIn = async (req, res) => {
       success: true,
       message: "Logged In successfull",
       user: {
+        _id: user._id,
         name: user.name,
         email,
         role: user.role,
@@ -359,28 +361,51 @@ module.exports.updateCart = async (req, res) => {
 module.exports.getOrdersForUser = async (req, res) => {
   try {
     const userId = req.user._id;
-    const orders = await Order.find({ buyer: userId })
-      .populate("products.product")
-      .sort({ createdAt: -1 });
-    const populatedOrders = orders.map((order) => ({
-      _id: order._id,
-      payment: order.payment.amount,
-      buyer: order.buyer,
-      status: order.status,
-      createdAt: order.createdAt,
-      updatedAt: order.updatedAt,
-      products: order.products.map((product) => ({
-        quantity: product.quantity,
-        size: product.size,
-        amount: product.product.price * product.quantity, // Calculate amount based on price and quantity
-        product: {
-          _id: product.product._id,
-          name: product.product.name,
-          price: product.product.price,
-          image: product.product.images[0],
-        },
-      })),
-    }));
+    const orders = await Order.find({ buyer: userId }).sort({ createdAt: -1 });
+
+    const populatedOrders = [];
+
+    for (const order of orders) {
+      const populatedOrder = {
+        _id: order._id,
+        payment: order.payment.amount,
+        buyer: order.buyer,
+        status: order.status,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+        products: [],
+      };
+
+      for (const productInfo of order.products) {
+        const productId = productInfo.product;
+
+        // Fetch product details
+        const product = await Product.findById(productId);
+
+        // Fetch reviews for the product within the specific order
+        const productWithOrderReviews = await Product.populate(product, {
+          path: "reviews",
+          match: { order: order._id }, // Filter reviews based on order ID
+        });
+
+        const populatedProduct = {
+          quantity: productInfo.quantity,
+          size: productInfo.size,
+          amount: product.price * productInfo.quantity,
+          product: {
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            image: product.images[0],
+            reviews: productWithOrderReviews.reviews,
+          },
+        };
+
+        populatedOrder.products.push(populatedProduct);
+      }
+
+      populatedOrders.push(populatedOrder);
+    }
 
     res.status(200).json({
       success: true,
@@ -469,5 +494,48 @@ module.exports.fetchFavorite = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// create controller for the rating feature
+module.exports.createReview = async (req, res) => {
+  try {
+    const { text, rating, orderId } = req.body;
+    const productId = req.params.productId;
+    const userId = req.user._id;
+    const hasBoughtProduct = await Order.exists({
+      _id: orderId,
+      buyer: userId,
+      "products.product": productId,
+      status: "Delivered",
+    });
+    if (!hasBoughtProduct) {
+      return res.status(400).send({
+        success: false,
+        message: "You can only review products you bought",
+      });
+    }
+    const review = await Review.create({
+      user: userId,
+      product: productId,
+      order: orderId,
+      text,
+      rating,
+    });
+    const product = await Product.findById(productId);
+    product.reviews.push(review._id);
+    await product.save();
+    const user = await User.findById(userId);
+    user.reviews.push(review._id);
+    await user.save();
+
+    return res
+      .status(200)
+      .send({ success: true, message: "Thanks for your feedback", review });
+  } catch (error) {
+    console.log(`Error in creating rating ${error}`);
+    res.status(500).send({
+      message: "Internal server error",
+    });
   }
 };

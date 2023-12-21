@@ -22,6 +22,12 @@ const userSchema = mongoose.Schema(
       },
     ],
     role: { type: Number, default: 0 },
+    reviews: [
+      {
+        type: mongoose.ObjectId,
+        ref: "Review",
+      },
+    ],
   },
   { timestamps: true }
 );

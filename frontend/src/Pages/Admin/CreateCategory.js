@@ -91,7 +91,7 @@ const CreateCategory = () => {
           </form>
         </div>
         <div className="categoriesContainer p-2 w-full">
-          <div className="gridContainer h-[20vh] md:h-[30vh] gap-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="gridContainer  gap-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {categories.map((category) => (
               <div
                 key={category.id}

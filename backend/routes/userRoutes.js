@@ -17,14 +17,6 @@ router.post(
   userController.updateUser
 );
 
-// admin route
-router.get(
-  "/admin",
-  passport.authenticate("jwt", { session: false }),
-  checkAdmin,
-  userController.checkAuth
-);
-
 router.post(
   "/add-to-cart",
   passport.authenticate("jwt", { session: false }),
@@ -73,5 +65,20 @@ router.post(
 );
 
 router.post("/payment-verification", paymentController.paymentVerification);
+
+// admin route
+router.get(
+  "/admin",
+  passport.authenticate("jwt", { session: false }),
+  checkAdmin,
+  userController.checkAuth
+);
+
+// route for ratings
+router.post(
+  "/rating/:productId",
+  passport.authenticate("jwt", { session: false }),
+  userController.createReview
+);
 
 module.exports = router;

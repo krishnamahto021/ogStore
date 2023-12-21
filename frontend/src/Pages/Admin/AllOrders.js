@@ -81,13 +81,13 @@ const AllOrders = () => {
                         <p>Size: {product.size}</p>
                       </div>
                     </div>
-                    <span>${product.amount.toFixed(2)}</span>
+                    <span>₹{product.amount.toFixed(2)}</span>
                   </li>
                 ))}
               </ul>
               <div className="mt-2">
                 <p className="text-lg font-semibold">
-                  Total Amount: ${order.payment.toFixed(2)}
+                  Total Amount: ₹{order.payment.toFixed(2)}
                 </p>
               </div>
               <div className="flex items-center ">

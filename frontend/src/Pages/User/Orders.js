@@ -3,6 +3,7 @@ import Layout from "../../Components/Layouts/Layout";
 import UserSideBar from "./UserSideBar";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrders, userSelector } from "../../Redux/Reducers/userReducer";
+import Rating from "./Rating";
 
 const Orders = () => {
   const { loggedInUser, orders } = useSelector(userSelector);
@@ -13,11 +14,12 @@ const Orders = () => {
       Authorization: `Bearer ${loggedInUser.jwtToken}`,
     },
   };
+
   useEffect(() => {
     if (loggedInUser.jwtToken) {
       dispatch(fetchOrders(config));
     }
-  }, [loggedInUser]);
+  }, [loggedInUser, orders]);
   return (
     <Layout>
       <div className="flex flex-col items-center">
@@ -36,34 +38,42 @@ const Orders = () => {
               </div>
               <ul>
                 {order.products.map((product) => (
-                  <li
-                    key={product.product._id}
-                    className="flex justify-between items-center"
-                  >
-                    <div className="flex items-center">
-                      <img
-                        src={product.product.image}
-                        alt={product.product.name}
-                        className="w-16 h-16 object-cover mr-4"
-                      />
-                      <div>
-                        <h2 className="text-lg font-semibold">
-                          {product.product.name}
-                        </h2>
-                        <p>Quantity: {product.quantity}</p>
-                        <p>Size: {product.size}</p>
+                  <div key={product.product._id}>
+                    <li
+                      key={product.product._id}
+                      className="flex justify-between items-center"
+                    >
+                      <div className="flex items-center">
+                        <img
+                          src={product.product.image}
+                          alt={product.product.name}
+                          className="w-16 h-16 object-cover mr-4"
+                        />
+                        <div>
+                          <h2 className="text-lg font-semibold">
+                            {product.product.name}
+                          </h2>
+                          <p>Quantity: {product.quantity}</p>
+                          <p>Size: {product.size}</p>
+                        </div>
                       </div>
-                    </div>
-                    <span>${product.amount.toFixed(2)}</span>
-                  </li>
+                      <span>₹ {product.amount.toFixed(2)}</span>
+                    </li>
+                    {order.status === "Delivered" ? (
+                      <Rating product={product.product} order={order} />
+                    ) : (
+                      <></>
+                    )}
+                  </div>
                 ))}
               </ul>
               <div className="mt-2">
                 <p className="text-lg font-semibold">
-                  Total Amount: ${order.payment.toFixed(2)}
+                  Total Amount: ₹{order.payment.toFixed(2)}
                 </p>
                 <p className="text-lg text-gray-400 font-semibold">
-                  <span className="text-textOne mr-2">Status:</span>{order.status}
+                  <span className="text-textOne mr-2">Status:</span>
+                  {order.status}
                 </p>
               </div>
             </div>

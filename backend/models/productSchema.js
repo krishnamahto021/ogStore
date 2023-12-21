@@ -39,6 +39,10 @@ const productModel = mongoose.Schema(
       type: Boolean,
       default: 0,
     },
+    reviews:[{
+      type:mongoose.ObjectId,
+      ref:"Review"
+    }]
   },
   { timestamps: true }
 );
