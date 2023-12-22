@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { AiFillThunderbolt } from "react-icons/ai";
+import RatingStars from "../../Components/RatingStars";
 
 const ProductPage = () => {
   const { productId } = useParams();
@@ -56,7 +57,6 @@ const ProductPage = () => {
     );
     setLiked(isLiked);
   }, [favorites, singleProduct]);
-
   const handleChangeQuantity = (operand) => {
     const selectedSize = singleProduct.sizes.find((s) => s.size === size);
     if (operand === 1) {
@@ -142,7 +142,7 @@ const ProductPage = () => {
       }
     }
   };
-
+  console.log(singleProduct);
   return (
     <Layout>
       {singleProduct.name ? (
@@ -260,6 +260,26 @@ const ProductPage = () => {
       ) : (
         <p>No item</p>
       )}
+      <div className="reviewsSection mt-8">
+        <h2 className="text-2xl font-bold mb-4 uppercase border-b-2 ">
+          Customer Love
+        </h2>
+        {singleProduct.reviews ? (
+          <div className="grid grid-cols-2">
+            {singleProduct.reviews.map((review) => (
+              <div key={review._id} className="mb-4 ">
+                <RatingStars count={review.rating} />
+                <p className="text-textOne ml-1">"{review.text}"</p>
+                <div className="userContainer flex">
+                  <p className="text-lg font-semibold">{review.user.name}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No</p>
+        )}
+      </div>
     </Layout>
   );
 };

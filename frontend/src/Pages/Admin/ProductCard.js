@@ -11,6 +11,7 @@ import { BsCartXFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
+import RatingStars from "../../Components/RatingStars";
 import {
   setBuyNow,
   setCart,
@@ -302,6 +303,9 @@ const ProductCard = ({ product }) => {
             </>
           )}
         </div>
+      </div>
+      <div className="flex gap-2 justify-around p-1">
+        <RatingStars count={product.averageRating} />
       </div>
       <div className="ctaContainer flex items-center flex-col gap-1 justify-between md:flex-row pb-2 px-2">
         {!cartItem ? (

@@ -523,6 +523,11 @@ module.exports.createReview = async (req, res) => {
       rating,
     });
     const product = await Product.findById(productId);
+    product.totalRating += rating;
+    product.numReviews += 1;
+    product.averageRating = Math.round(
+      product.totalRating / product.numReviews
+    );
     product.reviews.push(review._id);
     await product.save();
     const user = await User.findById(userId);

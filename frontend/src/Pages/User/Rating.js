@@ -23,6 +23,10 @@ const Rating = ({ product, order }) => {
   const handleRateReview = async () => {
     try {
       const orderId = order._id;
+      if (!text) {
+        toast.error(`Write about your experience`);
+        return;
+      }
       const { data } = await axios.post(
         `/user/rating/${product._id}`,
         { text, rating, orderId },
@@ -40,9 +44,6 @@ const Rating = ({ product, order }) => {
     }
   };
 
-  useEffect(() => {
-    
-  }, []);
   return hasReviewed ? (
     <div className="m-2">
       <RatingStars count={hasReviewed.rating} />

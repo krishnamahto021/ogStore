@@ -10,7 +10,7 @@ const RatingStars = ({ count }) => {
       stars.push(
         <StarIcon
           key={i}
-          className="text-orange-500 cursor-pointer hover:scale-105 duration-200"
+          className="text-orange-500  hover:scale-105 duration-200"
         />
       );
     }

@@ -141,23 +141,27 @@ module.exports.createProduct = async (req, res) => {
     });
   }
 };
-
 module.exports.fetchAllProduct = async (req, res) => {
   try {
     const products = await Product.find({})
       .populate("category")
+      .populate({
+        path: "reviews",
+        populate: { path: "user", select: "name email" },
+      })
       .limit(12)
       .sort({ createdAt: -1 });
+
     return res.status(200).send({
-      message: "Product fetched successfully",
+      message: "Products fetched successfully",
       totalProducts: products.length,
       success: true,
       products,
     });
   } catch (error) {
-    console.log(`Error in fetching product ${error}`);
+    console.log(`Error in fetching products: ${error}`);
     return res.status(500).send({
-      message: "Error in fetching product",
+      message: "Error in fetching products",
       success: false,
     });
   }
@@ -166,7 +170,10 @@ module.exports.fetchAllProduct = async (req, res) => {
 module.exports.fetchSingleProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate({
+      path: "reviews",
+      populate: { path: "user", select: "name email" },
+    });
     if (product) {
       return res.status(200).send({
         success: true,

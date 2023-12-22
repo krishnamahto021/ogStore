@@ -39,10 +39,24 @@ const productModel = mongoose.Schema(
       type: Boolean,
       default: 0,
     },
-    reviews:[{
-      type:mongoose.ObjectId,
-      ref:"Review"
-    }]
+    reviews: [
+      {
+        type: mongoose.ObjectId,
+        ref: "Review",
+      },
+    ],
+    totalRating: {
+      type: Number,
+      default: 0,
+    },
+    numReviews: {
+      type: Number,
+      default: 0,
+    },
+    averageRating: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
