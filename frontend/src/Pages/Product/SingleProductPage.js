@@ -46,10 +46,8 @@ const ProductPage = () => {
     setQuantity(!cartItem ? 1 : cartItem.quantity);
   }, [cartItem]);
   useEffect(() => {
-    if (loggedInUser.jwtToken) {
-      dispatch(fetchSingleProduct({ config, productId }));
-    }
-  }, [loggedInUser]);
+    dispatch(fetchSingleProduct({ productId }));
+  }, []);
 
   useEffect(() => {
     const isLiked = favorites.some(
@@ -142,7 +140,6 @@ const ProductPage = () => {
       }
     }
   };
-  console.log(singleProduct);
   return (
     <Layout>
       {singleProduct.name ? (
@@ -173,25 +170,27 @@ const ProductPage = () => {
             </div>
             <p className="text-textOne text-base">{`₹ ${singleProduct.price}`}</p>
 
-            <div className="flex justify-center gap-2  p-1 items-center ">
+            <div className="flex justify-evenly gap-2  p-1 items-center flex-col">
               <p className="text-xl font-light text-textOne">
                 Select your Size
               </p>
-              <div className=" flex text-3xl gap-2 max-w-[17rem] flex-wrap justify-center ">
+              <div className=" flex text-3xl gap-2   justify-center flex-wrap max-w-prose p-2 ">
                 {size || cartItem ? (
                   <>
                     {singleProduct.sizes.map((size) => (
-                      <button
-                        key={size.size}
-                        className={`inline-block ${
-                          size.quantity !== 0
-                            ? "text-textFour cursor-pointer "
-                            : "disabled  text-red-500 cursor-not-allowed"
-                        } bg-bgOne w-full h-full rounded-full px-1 py-1  font-semibold  mr-2 mb-2`}
-                        onClick={() => setSize(size.size)}
-                      >
-                        {`${size.size}`}
-                      </button>
+                      <div className="flex gap-1">
+                        <button
+                          key={size.size}
+                          className={`inline-block ${
+                            size.quantity !== 0
+                              ? "text-textFour cursor-pointer "
+                              : "disabled  text-red-500 cursor-not-allowed"
+                          } bg-bgOne w-full h-full rounded-full px-1 py-1  font-semibold  mr-2 mb-2`}
+                          onClick={() => setSize(size.size)}
+                        >
+                          {`${size.size}`}
+                        </button>
+                      </div>
                     ))}
                     <div className="w-full flex  gap-4  items-center justify-center">
                       <p>{size ? size : cartItem.size}</p>
@@ -262,12 +261,12 @@ const ProductPage = () => {
       )}
       <div className="reviewsSection mt-8">
         <h2 className="text-2xl font-bold mb-4 uppercase border-b-2 ">
-          Customer Love
+          Customer"s Love
         </h2>
-        {singleProduct.reviews ? (
-          <div className="grid grid-cols-2">
+        {singleProduct.reviews && singleProduct.reviews.length !== 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {singleProduct.reviews.map((review) => (
-              <div key={review._id} className="mb-4 ">
+              <div key={review._id} className="mb-4 max-w-xs">
                 <RatingStars count={review.rating} />
                 <p className="text-textOne ml-1">"{review.text}"</p>
                 <div className="userContainer flex">
@@ -277,7 +276,7 @@ const ProductPage = () => {
             ))}
           </div>
         ) : (
-          <p>No</p>
+          <p className="flex justify-around text-3xl font-light ">No any reviews yet 🐱</p>
         )}
       </div>
     </Layout>

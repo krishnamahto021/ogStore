@@ -108,7 +108,7 @@ const ProductCard = ({ product }) => {
       }
     } catch (error) {
       if (error.response) {
-        toast.error(`${error.response.data.message}`);
+        toast.error(`${error.response.data || error.response.data.message}`);
         dispatch(setRedirectPath(location.pathname));
         navigate("/sign-in");
       } else {

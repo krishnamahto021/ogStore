@@ -109,7 +109,7 @@ export const router = createBrowserRouter([
   { path: "/verify-user/:token", element: <VerifyUserEmail /> },
   { path: "/forgotten-password", element: <ForgottenPassword /> },
   { path: "/update-password/:token", element: <UpdatePassword /> },
-
+  { path: "/user/product/:productId", element: <SingleProductPage /> },
   // user routes
   {
     path: "/user/profile",
@@ -142,10 +142,6 @@ export const router = createBrowserRouter([
   {
     path: "/user/payment-verification",
     element: <PaymentVerification />,
-  },
-  {
-    path: "/user/product/:productId",
-    element: <ProtectedRouteHome element={<SingleProductPage />} />,
   },
 
   // admin routes

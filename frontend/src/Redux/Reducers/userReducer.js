@@ -68,12 +68,9 @@ export const fetchFavorites = createAsyncThunk(
 export const fetchSingleProduct = createAsyncThunk(
   "/user/fetch-single-product",
   async (info, thunkAPI) => {
-    const { productId, config } = info;
+    const { productId } = info;
     try {
-      const { data } = await axios.get(
-        `/admin/fetch-product/${productId}`,
-        config
-      );
+      const { data } = await axios.get(`/admin/fetch-product/${productId}`);
       if (data.success) {
         return data.product;
       }
@@ -129,7 +126,6 @@ const userSlice = createSlice({
       };
     },
     setBuyNow: (state, action) => {
-
       return {
         ...state,
         buyNow: action.payload,
