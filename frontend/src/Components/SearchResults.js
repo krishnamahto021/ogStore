@@ -15,7 +15,7 @@ const SearchResults = () => {
   return (
     <>
       <div
-        className="modalWrapper fixed top-0 left-0 right-0  bg-[rgba(0,0,0,0.7)]  h-screen z-50 "
+        className="modalWrapper fixed cursor-pointer top-0 left-0 right-0  bg-[rgba(0,0,0,0.7)]  h-screen z-50 "
         onClick={handleShowSearchScreen}
       ></div>
       <div className="resultContainer flex p-2  items-center justify-center w-fit h-full text-textOne absolute top-[10vh]">

@@ -13,6 +13,7 @@ import {
   setShowSearchScreen,
 } from "../../Redux/Reducers/adminReducer";
 import { searchProduct } from "../../Api/agolia";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const { loggedInUser, cartItems } = useSelector(userSelector);
@@ -23,6 +24,10 @@ const Header = () => {
   const dispatch = useDispatch();
   const handleSearch = async () => {
     try {
+      if (!query) {
+        toast.error(`Type name or model of the Sneaker`);
+        return;
+      }
       const results = await searchProduct(query);
       dispatch(setSearchProduct(results));
       dispatch(setShowSearchScreen());
@@ -93,22 +98,23 @@ const Header = () => {
         </div>
       </div>
       <div
-        className={`searchContainer opacity-0 max-h-0 overflow-hidden duration-300 ${
+        className={`searchContainer opacity-0 max-h-0 duration-300 relative flex ${
           showSearch ? "opacity-100 max-h-full " : ""
         }`}
       >
         <input
           placeholder="Search your kick...."
           required
-          className="relative focus:outline-none bg-bgFour text-textThree rounded-sm p-2 w-screen"
+          className="focus:outline-none bg-bgFour text-textThree rounded-sm p-2 w-screen pl-10"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
         <BsSearch
-          className="duration-200 text-2xl absolute right-6 top-3/4 sm:top-[65%] md:top-[60%] cursor-pointer m-4 "
+          className="duration-200 text-2xl absolute right-6 top-1/2 transform -translate-y-1/2 cursor-pointer"
           onClick={handleSearch}
         />
       </div>
+
       <div
         className={`mobileViewContainer flex flex-col items-center justify-center fixed gap-12 text-4xl ${
           !showHam ? "left-0 duration-500" : "-left-[50rem] duration-500"

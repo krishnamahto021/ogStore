@@ -27,7 +27,8 @@ await fetchApiKeys();
 export async function indexProducts(products) {
   try {
     const algoliaFormattedProducts = products.map((product) => ({
-      objectID: product._id,
+      objectID: product._id, // for algolia we need to use it
+      _id: product._id,
       name: product.name,
       slug: product.slug,
       sizes: product.sizes,
@@ -38,6 +39,7 @@ export async function indexProducts(products) {
     }));
     await index.saveObjects(algoliaFormattedProducts);
   } catch (error) {
+    console.log(error);
     console.log(`Error in indexing products: ${error}`);
   }
 }
@@ -46,6 +48,7 @@ export async function updateProductFromIndex(product) {
   try {
     const algoliaFormattedProduct = {
       objectID: product._id,
+      _id: product._id,
       name: product.name,
       slug: product.slug,
       price: product.price,
